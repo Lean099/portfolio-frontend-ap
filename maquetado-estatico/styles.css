@@ -1,0 +1,14 @@
+.socials{
+  padding: 0;
+}
+
+.banner{
+  width: 100%;
+  height: 450px;
+}
+
+.profile{
+  width: 150px;
+  height: 150px;
+  border-radius: 100%;
+}
