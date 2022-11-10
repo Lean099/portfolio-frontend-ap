@@ -15,8 +15,8 @@
       <div class="container-fluid">
         <span class="navbar-brand mb-0 h1">Leandro...</span>
         <div>
-          <button class="btn socials"><i class="fa-brands fa-github" style="padding:0;font-size:30px;"></i></button>
-          <button class="btn socials ms-2"><i class="fa-brands fa-linkedin" style="padding:0;font-size:30px;"></i></button>
+          <button class="btn editBtn"><i class="fa-brands fa-github" style="padding:0;font-size:30px;"></i></button>
+          <button class="btn editBtn ms-2"><i class="fa-brands fa-linkedin" style="padding:0;font-size:30px;"></i></button>
           <button type="button" class="btn btn-dark ms-2" data-bs-toggle="modal" data-bs-target="#exampleModal">Login</button>
         </div>
       </div>
@@ -55,10 +55,21 @@
     <!---->
 
     <div class="card my-3 mx-2">
-      <img src="https://assets.hongkiat.com/uploads/minimalist-dekstop-wallpapers/4k/original/19.jpg?3" class="card-img-top img-fluid banner" alt="">
+      <div class="imghb containerBanner">
+        <img src="https://assets.hongkiat.com/uploads/minimalist-dekstop-wallpapers/4k/original/19.jpg?3" class="card-img-top img-fluid banner" alt="">
+        <button class="btn btnBanner editBtnBanner editBtn position-absolute top-50 start-50 translate-middle"><i class="fa-solid fa-pen-to-square"></i></button>
+      </div>
       <div class="card-body position-relative">
-        <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" class="profile position-absolute top-0 start-50 translate-middle" alt="profile">
-        <h3 class="card-title">Leandro</h3>
+        <div class="imgh containerProfilePicture position-absolute top-0 start-50 translate-middle">
+          <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" class="profilePicture position-absolute top-0 start-50 translate-middle" alt="profilePicture">
+          <div class="overlay position-absolute top-0 start-50 translate-middle">
+            <button class="btn myBtn editBtnProfilePicture editBtn position-absolute top-50 start-50 translate-middle"><i class="fa-solid fa-pen-to-square"></i></button>
+          </div>
+        </div>
+        <div class="d-flex justify-content-between">
+          <h3 class="card-title">Leandro</h3>
+          <button class="btn editBtn"><i class="fa-solid fa-pen-to-square"></i></button>
+        </div>
         <p class="card-text">Estudiante de programacion web...</p>
         <p class="card-text">Argentina...</p>
       </div>
@@ -66,7 +77,11 @@
 
     <div class="card my-3 mx-2">
       <div class="card-body">
-        <h3>Acerca de</h3>
+        
+        <div class="d-flex justify-content-between">
+          <h3>Acerca de</h3>
+          <button class="btn editBtn"><i class="fa-solid fa-pen-to-square"></i></button>
+        </div>
         Actualmente aprendiendo programacion...
       </div>
     </div>
@@ -74,11 +89,17 @@
     <div class="card my-3 mx-2">
       <div class="card-body">
         <div class="experiencia">
-          <h3>Experiencia</h3>
+          <div class="d-flex justify-content-between">
+            <h3>Experiencia</h3>
+            <button class="btn editBtn"><i class="fa-solid fa-plus"></i></button>
+          </div>
           <div class="my-3">Sin experiencia en mundo IT pero con muchas ganas de empezar...</div>
         </div>
         <div class="educacion">
-          <h3>Educacion</h3>
+          <div class="d-flex justify-content-between">
+            <h3>Educacion</h3>
+            <button class="btn editBtn"><i class="fa-solid fa-plus"></i></button>
+          </div>
           <!---->
 
           <div class="card border-light mb-3">
@@ -88,7 +109,14 @@
               </div>
               <div class="col-md-11">
                 <div class="card-body">
-                  <h5 class="card-title">Instituto de Ciencias Empresariales</h5>
+                  <div class="d-flex justify-content-between">
+                    <h5 class="card-title">Instituto de Ciencias Empresariales</h5>
+                    <div>
+                      <button class="btn editBtn"><i class="fa-solid fa-pen-to-square"></i></button>
+                      <button class="btn editBtn ms-1"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                  </div>
+                  
                   <p class="card-text">Bachiller en Economía y Administración</p>
                   <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
                 </div>
@@ -103,7 +131,13 @@
               </div>
               <div class="col-md-11">
                 <div class="card-body">
-                  <h5 class="card-title">Escuela de Nivel Inicial N° 382. "Libertador de América"</h5>
+                  <div class="d-flex justify-content-between">
+                    <h5 class="card-title">Escuela de Nivel Inicial N° 382. "Libertador de América"</h5>
+                    <div>
+                      <button class="btn editBtn"><i class="fa-solid fa-pen-to-square"></i></button>
+                      <button class="btn editBtn ms-1"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                  </div>
                   <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
                   <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
                 </div>
@@ -118,28 +152,56 @@
 
     <div class="card my-3 mx-2">
       <div class="card-body">
-        <h3>Hard Skills & Soft Skills</h3>
+        <div class="d-flex justify-content-between">
+          <h3>Hard Skills & Soft Skills</h3>
+          <button class="btn editBtn"><i class="fa-solid fa-plus"></i></button>
+        </div>
         <div class="d-flex flex-column align-items-center">
 
-            <div>Skill 1</div>
-            <div class="progress w-75 mw-100 mb-3">
-              <div class="progress-bar progress-bar-striped bg-dark" role="progressbar" aria-label="Basic example" style="width: 70%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+          
+          <div class="d-flex">
+            <p>Skill 1</p>
+            <div class="ms-3">
+              <button class="btn editBtn"><i class="fa-solid fa-pen-to-square"></i></button>
+              <button class="btn editBtn ms-1"><i class="fa-solid fa-trash"></i></button>
             </div>
+          </div>
+          <div class="progress w-75 mw-100 mb-3">
+            <div class="progress-bar progress-bar-striped bg-dark" role="progressbar" aria-label="Basic example" style="width: 70%" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
+          </div>
 
-            <div>Skill 2</div>
-            <div class="progress w-75 mw-100 mb-3">
-              <div class="progress-bar progress-bar-striped bg-dark" role="progressbar" aria-label="Basic example" style="width: 50%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+          <div class="d-flex">
+            <p>Skill 2</p>
+            <div class="ms-3">
+              <button class="btn editBtn"><i class="fa-solid fa-pen-to-square"></i></button>
+              <button class="btn editBtn ms-1"><i class="fa-solid fa-trash"></i></button>
             </div>
+          </div>
+          <div class="progress w-75 mw-100 mb-3">
+            <div class="progress-bar progress-bar-striped bg-dark" role="progressbar" aria-label="Basic example" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+          </div>
 
-            <div>Skill 3</div>
-            <div class="progress w-75 mw-100 mb-3">
-              <div class="progress-bar progress-bar-striped bg-dark" role="progressbar" aria-label="Basic example" style="width: 90%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+          <div class="d-flex">
+            <p>Skill 3</p>
+            <div class="ms-3">
+              <button class="btn editBtn"><i class="fa-solid fa-pen-to-square"></i></button>
+              <button class="btn editBtn ms-1"><i class="fa-solid fa-trash"></i></button>
             </div>
+          </div>
+          <div class="progress w-75 mw-100 mb-3">
+            <div class="progress-bar progress-bar-striped bg-dark" role="progressbar" aria-label="Basic example" style="width: 90%" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100"></div>
+          </div>
 
-            <div>Skill 4</div>
-            <div class="progress w-75 mw-100 mb-3">
-              <div class="progress-bar progress-bar-striped bg-dark" role="progressbar" aria-label="Basic example" style="width: 20%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+          <div class="d-flex">
+            <p>Skill 4</p>
+            <div class="ms-3">
+              <button class="btn editBtn"><i class="fa-solid fa-pen-to-square"></i></button>
+              <button class="btn editBtn ms-1"><i class="fa-solid fa-trash"></i></button>
             </div>
+          </div>
+          <div class="progress w-75 mw-100 mb-3">
+            <div class="progress-bar progress-bar-striped bg-dark" role="progressbar" aria-label="Basic example" style="width: 20%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
+          </div>
           
         </div>
       </div>
@@ -147,24 +209,37 @@
 
     <div class="card my-3 mx-2">
       <div class="card-body">
-        <h3>Proyectos</h3>
+        <div class="d-flex justify-content-between">
+          <h3>Proyectos</h3>
+          <button class="btn editBtn"><i class="fa-solid fa-plus"></i></button>
+        </div>
           <div class="card border-light">
             <div class="card-body">
-              <h5 class="card-title text-primary">Proyecto 1</h5>
+              <div class="d-flex justify-content-between">
+                <h5 class="card-title text-primary">Proyecto 1</h5>
+                <div>
+                  <button class="btn editBtn"><i class="fa-solid fa-pen-to-square"></i></button>
+                  <button class="btn editBtn ms-1"><i class="fa-solid fa-trash"></i></button>
+                </div>
+              </div>
               <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
             </div>
           </div>
 
           <div class="card border-light">
             <div class="card-body">
-              <h5 class="card-title text-primary">Proyecto 2</h5>
+              <div class="d-flex justify-content-between">
+                <h5 class="card-title text-primary">Proyecto 2</h5>
+                <div>
+                  <button class="btn editBtn"><i class="fa-solid fa-pen-to-square"></i></button>
+                  <button class="btn editBtn ms-1"><i class="fa-solid fa-trash"></i></button>
+                </div>
+              </div>
               <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
             </div>
           </div>
       </div>
     </div>
-
-    
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/js/all.min.js" integrity="sha512-naukR7I+Nk6gp7p5TMA4ycgfxaZBJ7MO5iC3Fp6ySQyKFHOGfpkSZkYVWV5R7u7cfAicxanwYQ5D1e17EfJcMA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>

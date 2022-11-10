@@ -1,4 +1,4 @@
-.socials{
+.editBtn{
   padding: 0;
 }
 
@@ -7,8 +7,56 @@
   height: 450px;
 }
 
-.profile{
+.profilePicture{
   width: 150px;
   height: 150px;
   border-radius: 100%;
+}
+
+/* Probando banner */
+
+.editBtnBanner{
+  opacity: 0;
+  transition: .5s ease;
+}
+
+.containerBanner:hover .editBtnBanner{
+  opacity: 1;
+  font-size: xx-large;
+}
+
+.containerBanner:hover .banner{
+  transition: .5s ease;
+  opacity: 0.8;
+  filter: blur(3px);
+}
+
+/* Profile picture */
+
+.overlay{
+  width: 150px;
+  height: 150px;
+  background-color: #8383837a;
+  border-radius: 100%;
+  opacity: 0;
+  transition: .5s ease;
+}
+
+.editBtnProfilePicture{
+  transition: .5s ease;
+  opacity: 0;
+}
+
+.containerProfilePicture:hover .editBtnProfilePicture{
+  opacity: 1;
+  font-size: xx-large;
+}
+
+.containerProfilePicture:hover .overlay{
+  opacity: 1;
+}
+
+.containerProfilePicture:hover img {
+  transition: .5s ease;
+  filter: blur(1px);
 }
