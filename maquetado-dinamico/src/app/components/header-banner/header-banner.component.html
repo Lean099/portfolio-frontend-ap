@@ -1,1 +1,106 @@
-<p>header-banner works!</p>
+<div class="card my-3 mx-2">
+    <div class="containerBanner">
+      <img src="https://assets.hongkiat.com/uploads/minimalist-dekstop-wallpapers/4k/original/19.jpg?3" class="card-img-top img-fluid banner" alt="">
+      <button class="btn editBtnBanner editBtn position-absolute top-50 start-50 translate-middle" data-bs-toggle="modal" data-bs-target=".editBannerModal" (click)="changeModal('banner')"><i class="fa-solid fa-pen-to-square"></i></button>
+    </div>
+    <div class="card-body position-relative">
+      <div class="containerProfilePicture position-absolute top-0 start-50 translate-middle">
+        <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" class="profilePicture position-absolute top-0 start-50 translate-middle" alt="profilePicture">
+        <div class="overlay position-absolute top-0 start-50 translate-middle">
+          <button class="btn editBtnProfilePicture editBtn position-absolute top-50 start-50 translate-middle" data-bs-toggle="modal" data-bs-target=".editProfilePictureModal" (click)="changeModal()"><i class="fa-solid fa-pen-to-square"></i></button>
+        </div>
+      </div>
+    
+      <!-- DATA -->
+      <div class="containerInfo" *ngIf="this.editInfo!=true">
+        <div class="d-flex justify-content-between">
+          <h3 class="card-title">Leandro</h3>
+          <button class="btn editBtn" (click)="toggleEdit()"><i class="fa-solid fa-pen-to-square"></i></button>
+        </div>
+        <p class="card-text">Estudiante de programacion web...</p>
+        <p class="card-text">Argentina...</p>
+      </div>
+      
+      <!-- EDIT -->
+      <div class="containerEditInfo" *ngIf="this.editInfo">
+        <div class="d-flex justify-content-between mb-2">
+          <div class="input-group">
+            <input type="text" class="form-control" placeholder="Your full name...">
+            <button class="btn btn-dark btn-sm" type="button">
+              <div class="btn-close btn-close-white"></div>
+            </button>
+          </div>
+        </div>
+    
+        <div class="d-flex justify-content-between mb-2">
+          <div class="input-group">
+            <input type="text" class="form-control" placeholder="What's your profession?">
+            <button class="btn btn-dark btn-sm" type="button">
+              <div class="btn-close btn-close-white"></div>
+            </button>
+          </div>
+        </div>
+    
+        <div class="d-flex justify-content-between mb-2">
+          <div class="input-group">
+            <input type="text" class="form-control" placeholder="Location">
+            <button class="btn btn-dark btn-sm" type="button">
+              <div class="btn-close btn-close-white"></div>
+            </button>
+          </div>
+        </div>
+    
+        <div class="d-grid gap-2 col-6 mx-auto mt-3">
+          <button (click)="toggleEdit()" class="btn btn-primary" type="button">Edit information</button>
+        </div>
+      </div>
+    
+    </div>
+    </div>
+    
+    <!-- Modal EDIT -->
+    <div class="modal fade editBannerModal editProfilePictureModal" id="modalUpdateImages" tabindex="-1" aria-labelledby="modalUpdateImagesLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+    
+        <!-- EDIT BANNER -->
+        <div class="modal-content" *ngIf="this.editBanner">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="modalUpdateImagesLabel">Update Banner</h1>
+            <button type="button" class="btn-close" (click)="resetInputFile()" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="input-group">
+              <input class="form-control form-control-sm" [(ngModel)]="inputValue" id="formFileSm" type="file">
+              <button class="btn btn-dark btn-sm" (click)="resetInputFile()" type="button" id="formFileSm">
+                <div class="btn-close btn-close-white"></div>
+              </button>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="resetInputFile()" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Update</button>
+          </div>
+        </div>
+    
+        <!-- EDIT PROFILE PICTURE -->
+        <div class="modal-content" *ngIf="this.editProfile">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="modalUpdateImagesLabel">Update Profile Picture</h1>
+            <button type="button" class="btn-close" (click)="resetInputFile()" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="input-group">
+              <input class="form-control form-control-sm" [(ngModel)]="inputValue" id="formFileSm" type="file">
+              <button class="btn btn-dark btn-sm" (click)="resetInputFile()" type="button" id="formFileSm">
+                <div class="btn-close btn-close-white"></div>
+              </button>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="resetInputFile()" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Update</button>
+          </div>
+        </div>
+        
+      </div>
+</div>

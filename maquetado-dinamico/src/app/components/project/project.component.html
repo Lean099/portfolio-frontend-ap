@@ -1,1 +1,34 @@
-<p>project works!</p>
+<div class="card my-3 mx-2">
+    <div class="card-body">
+      <div class="d-flex justify-content-between">
+        <h3>Proyectos</h3>
+        <button class="btn editBtn"><i class="fa-solid fa-plus"></i></button>
+      </div>
+        <div class="card border-light" *ngFor="let d of data; let indexOfElement=$implicit">
+  
+          <!-- DATA -->
+          <div class="card-body" *ngIf="d.edit!=true">
+            <div class="d-flex justify-content-between">
+              <h5 class="card-title text-primary">{{ d.nameProject }}</h5>
+              <div>
+                <button class="btn editBtn" (click)="toggleEdit(indexOfElement.id)"><i class="fa-solid fa-pen-to-square"></i></button>
+                <button class="btn editBtn ms-1"><i class="fa-solid fa-trash"></i></button>
+              </div>
+            </div>
+            <p class="card-text">{{ d.description }}</p>
+          </div>
+  
+          <!-- EDIT -->
+          <div class="card-body" *ngIf="d.edit">
+            <div class="d-flex justify-content-between">
+              <input type="text" class="form-control mb-2" [(ngModel)]="d.nameProject" placeholder="Name project">
+              <div class="ms-2">
+                <button class="btn btn-primary" (click)="toggleEdit(indexOfElement.id)">Edit</button>
+              </div>
+            </div>
+            <textarea class="form-control" [(ngModel)]="d.description" rows="1" placeholder="Project description"></textarea>
+          </div>
+  
+        </div>
+    </div>
+</div>

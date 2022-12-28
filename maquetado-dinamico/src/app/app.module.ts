@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppComponent } from './components/app/app.component';
 import { AboutComponent } from './components/about/about.component';
@@ -11,7 +12,22 @@ import { LoginComponent } from './components/login/login.component';
 import { ProjectComponent } from './components/project/project.component';
 import { SkillsComponent } from './components/skills/skills.component';
 
+// Material Angular
+import { MaterialModule } from '../material.module';
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { MomentDateModule } from '@angular/material-moment-adapter';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
+
 @NgModule({
+  imports: [
+    BrowserModule,
+    FormsModule,
+    ReactiveFormsModule, 
+    MaterialModule, 
+    BrowserAnimationsModule,
+    MomentDateModule,
+    TooltipModule.forRoot()
+  ],
   declarations: [
     AppComponent,
     AboutComponent,
@@ -22,10 +38,7 @@ import { SkillsComponent } from './components/skills/skills.component';
     LoginComponent,
     ProjectComponent,
     SkillsComponent
-  ],
-  imports: [
-    BrowserModule
-  ],
+  ], 
   providers: [],
   bootstrap: [AppComponent]
 })

@@ -1,0 +1,11 @@
+.customRange::-webkit-slider-thumb {
+    background: rgb(58, 58, 58);
+}
+  
+.customRange::-moz-range-thumb {
+    background: rgb(58, 58, 58);
+}
+  
+.customRange::-ms-thumb {
+    background: gray;
+}
