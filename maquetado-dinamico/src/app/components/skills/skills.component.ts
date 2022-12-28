@@ -32,8 +32,8 @@ export class SkillsComponent implements OnInit {
   ngOnInit(){}
 
   toggleEdit(id : number) : void {
-    let value = this.data.find(el => el.id===id).edit
-    this.data.find(el => el.id===id).edit = !value
+    let value = this.data.find(el => el.id===id)!.edit
+    this.data.find(el => el.id===id)!.edit = !value
   }
 
 }
