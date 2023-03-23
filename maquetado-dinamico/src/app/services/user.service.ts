@@ -7,8 +7,8 @@ import { User } from '../others/interfaces';
 })
 export class UserService {
 
-  user : User = {
-    _id: "",
+  /*user : User = {
+    id: "",
     username: "",
     password: "",
     avatar: "",
@@ -19,13 +19,13 @@ export class UserService {
 
   constructor() { 
     this.userIsLoggedChange.subscribe((value)=>{
-      this.user.isLogged = value
+      //this.user.isLogged = value
     })
   }
 
   changeLoggedUser(){
-    this.userIsLoggedChange.next(!this.user.isLogged)
+    //this.userIsLoggedChange.next(!this.user.isLogged)
     console.log(this.user)
-  }
+  }*/
   
 }

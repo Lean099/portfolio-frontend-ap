@@ -10,22 +10,18 @@ import { ApiService } from 'src/app/services/api.service';
 })
 export class LoginComponent {
 
-  username : string = ''
+  email : string = ''
   password : string = ''
 
   constructor(
     private _user : UserService,
     private _api : ApiService,
-    @Inject(DOCUMENT) private document: Document,
-    private el : ElementRef
+    @Inject(DOCUMENT) private document: Document
   ){}
   
-
   login(){
-    console.log(this.username +" "+ this.password)
-    this._user.user = this._api.login(this.username, this.password).user
-    console.log(this._user.user)
-    this.username = '';
+    this._api.login(this.email, this.password)
+    this.email = '';
     this.password = '';
     this.document.body.classList.remove("modal-open")
     this.document.body.style.removeProperty("overflow")
@@ -33,5 +29,18 @@ export class LoginComponent {
     //this.document.getElementsByClassName("modal-backdrop")
     this.document.body.getElementsByClassName("modal-backdrop")[0].remove()
   }
+
+  /*login2(){
+    console.log(this.email +" "+ this.password)
+    //this._user.user = this._api.login(this.email, this.password).user
+    console.log(this._user.user)
+    this.email = '';
+    this.password = '';
+    this.document.body.classList.remove("modal-open")
+    this.document.body.style.removeProperty("overflow")
+    this.document.body.style.removeProperty("padding-right")
+    //this.document.getElementsByClassName("modal-backdrop")
+    this.document.body.getElementsByClassName("modal-backdrop")[0].remove()
+  }*/
 
 }

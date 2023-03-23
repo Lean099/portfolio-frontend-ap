@@ -1,6 +1,6 @@
 import { Component, OnInit} from '@angular/core';
 import { MAT_DATE_FORMATS } from '@angular/material/core';
-import { UserService } from 'src/app/services/user.service';
+import { ApiService } from 'src/app/services/api.service';
 
 export const MY_DATE_FORMATS = {
   parse: {
@@ -24,16 +24,17 @@ export const MY_DATE_FORMATS = {
 })
 export class AppComponent implements OnInit{
 
-  private isLogged : boolean;
+  private data : any;
   
   constructor(
-    public _User : UserService
+    public _api : ApiService
   ){
-    this.isLogged = _User.user.isLogged
+    
   }
 
   ngOnInit(){
-    console.log(this.isLogged)
+    this._api.loginData$.subscribe(data => this.data = data)
+    console.log(this.data)
   }
 
 }

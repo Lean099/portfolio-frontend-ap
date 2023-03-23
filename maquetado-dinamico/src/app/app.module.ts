@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './components/app/app.component';
 import { AboutComponent } from './components/about/about.component';
@@ -21,6 +22,7 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
 @NgModule({
   imports: [
     BrowserModule,
+    HttpClientModule,
     FormsModule,
     ReactiveFormsModule, 
     MaterialModule, 
