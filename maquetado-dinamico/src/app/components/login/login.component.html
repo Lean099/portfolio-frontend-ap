@@ -1,14 +1,15 @@
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="logineModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h1 class="modal-title fs-5" id="exampleModalLabel">Log In</h1>
+          <h1 class="modal-title fs-5" id="loginModalLabel">Log In</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           
+          <!--
           <div class="mb-3">
-            <label for="email" class="form-label">email</label>
+            <label for="email" class="form-label">Email</label>
             <input [(ngModel)]="email" type="text" class="form-control" id="email">
           </div>
   
@@ -16,7 +17,18 @@
             <label for="password" class="form-label">Password</label>
             <input [(ngModel)]="password" type="password" class="form-control" id="password">
           </div>
-  
+          -->
+
+          <mat-form-field style="width: 100%;">
+            <mat-label>Email</mat-label>
+            <input type="text" matInput [formControl]="this.forms.controls.emailFormControl" placeholder="Email">
+          </mat-form-field>
+
+          <mat-form-field style="width: 100%;">
+            <mat-label>Contraseña</mat-label>
+            <input type="password" matInput [formControl]="this.forms.controls.passwordFormControl" placeholder="Contraseña">
+          </mat-form-field>
+
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

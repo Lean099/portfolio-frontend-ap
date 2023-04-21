@@ -3,6 +3,15 @@ import { DOCUMENT } from '@angular/common';
 import { UserService } from '../../services/user.service';
 import { ApiService } from 'src/app/services/api.service';
 import { UserApiService } from 'src/app/services/user-api.service';
+import { FormControl, FormGroup, FormGroupDirective, NgForm, Validators } from '@angular/forms';
+import { ErrorStateMatcher } from '@angular/material/core';
+
+export class MyErrorStateMatcher implements ErrorStateMatcher {
+  isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
+    const isSubmitted = form && form.submitted;
+    return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted));
+  }
+}
 
 @Component({
   selector: 'app-header-social-media-bar',
@@ -13,6 +22,13 @@ export class HeaderSocialMediaBarComponent implements OnInit{
 
   data : any;
   user : any;
+
+  forms = new FormGroup({
+    emailFormControl : new FormControl('', [Validators.required]),
+    passwordFormControl : new FormControl('', [Validators.required])
+  })
+
+  matcher = new MyErrorStateMatcher();
 
   constructor(
     public _api : ApiService,
@@ -26,13 +42,30 @@ export class HeaderSocialMediaBarComponent implements OnInit{
     console.log(this.data)
   }
 
-  testGetUser(){  // Funciona
-    this._user.getUser()//.subscribe(data => this.user = data)
-    console.log(this.user)
+  disableFormControl(e : any){
+    if(this.forms.get(e.target.name as string)?.disabled){
+      this.forms.get(e.target.name as string)?.enable()
+    }else{
+      this.forms.get(e.target.name as string)?.disable()
+    }
+  }
+
+  clearInputs(){
+    this.forms.controls.emailFormControl.reset()
+    this.forms.controls.passwordFormControl.reset()
+  }
+
+  updateEmailAndPassword(){
+    let credentials = {
+      email: this.forms.controls.emailFormControl.enabled&&this.forms.controls.emailFormControl.dirty ? this.forms.controls.emailFormControl.getRawValue() : null,
+      password: this.forms.controls.passwordFormControl.enabled&&this.forms.controls.passwordFormControl.dirty ? this.forms.controls.passwordFormControl.getRawValue() : null
+    }
+    this._user.updateEmailAndPassword(credentials)
   }
 
   logout(){
     this._api.logout()
+    this._user.getDefaultUserData();
     /* Al hacer el logout hay que quitar la clase modal-open del body y los estilos, tambien hay que remover un div */
     /* ME EQUIVOQUE ES CUANDO HACEMOS EL LOGIN HAY QUE REMOVER ESAS COSAS */
     /*this._User.user = {

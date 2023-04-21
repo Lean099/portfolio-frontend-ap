@@ -45,7 +45,6 @@ export class SkillApiService {
     }, this.httpOptions);
   }
 
-  // Tendremos que cambiar el backend para este porque no se puede enviar un body con get, solo es con este
   getAllUserSkill() {
     return this._http.get(`${this.apiUrl}/api/skill/all/${this.idLoggedUser}`,
     { headers: new HttpHeaders({ Authorization: `Bearer ${this.accesstoken}` }) })

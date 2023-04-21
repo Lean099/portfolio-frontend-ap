@@ -1,14 +1,69 @@
 <nav class="navbar bg-light">
     <div class="container-fluid">
-      <span class="navbar-brand mb-0 h1">Leandro...</span>
       <div>
-        <button class="btn editBtn"><i class="fa-brands fa-github" style="padding:0;font-size:30px;"></i></button>
-        <button class="btn editBtn ms-2"><i class="fa-brands fa-linkedin" style="padding:0;font-size:30px;"></i></button>
-        <button *ngIf="this.data.isLogged==false"  type="button" class="btn btn-dark ms-2" data-bs-toggle="modal" data-bs-target="#exampleModal">Login</button>
-        <button *ngIf="this.data.isLogged" (click)="logout()"  type="button" class="btn btn-dark ms-2">Log Out</button>
-        <button *ngIf="this.data.isLogged" (click)="testGetUser()"  type="button" class="btn btn-dark ms-2">GetUser</button>
+        <img src="https://res.cloudinary.com/lean99/image/upload/v1681894001/Ap/logo-ap-2_ytb3sk.png" style="width: 100px;">
+        <span class="navbar-brand mb-0 h1 ms-2">#YoProgramo</span>
+      </div>
+      <div>
+        <button type="button" class="btn btn-dark ms-2" data-bs-toggle="modal" data-bs-target="#userDataModal"><i class="fa-solid fa-user-gear fa-lg"></i></button>
+        <button *ngIf="this.data.isLogged==false"  type="button" class="btn btn-dark ms-1" data-bs-toggle="modal" data-bs-target="#loginModal">Login</button>
+        <button *ngIf="this.data.isLogged" (click)="logout()"  type="button" class="btn btn-dark ms-1">Log Out</button>
       </div>
     </div>
 </nav>
     
 <app-login *ngIf="this.data.isLogged==false"></app-login>
+
+<!-- Modal edit email-password -->
+
+<div class="modal fade" id="userDataModal" tabindex="-1" aria-labelledby="userDataModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="userDataModalLabel">Actualizar Email y Contraseña</h1>
+        <button (click)="clearInputs()" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        
+        <div class="d-flex">
+          <mat-form-field style="width: 100%;">
+            <mat-label>Email</mat-label>
+            <input type="email" matInput [formControl]="this.forms.controls.emailFormControl" [errorStateMatcher]="matcher"
+                   placeholder="Nuevo email">
+            <mat-error *ngIf="this.forms.controls.emailFormControl.hasError('required')">
+              Email es <strong>requerido</strong>
+            </mat-error>
+          </mat-form-field>
+          <div>
+            <button class="btn btn-dark btn-sm mt-3" (click)="disableFormControl($event)" name="emailFormControl" style="border-radius: 0 10px 10px 0;" type="button">
+              <div class="btn-close btn-close-white"></div>
+            </button>
+          </div>
+        </div>
+
+        <div class="d-flex">
+          <mat-form-field style="width: 100%;">
+            <mat-label>Contraseña</mat-label>
+            <input type="password" matInput [formControl]="this.forms.controls.passwordFormControl" [errorStateMatcher]="matcher"
+                   placeholder="Nueva contraseña">
+            <mat-error *ngIf="this.forms.controls.passwordFormControl.hasError('required')">
+              Contraseña es <strong>requerido</strong>
+            </mat-error>
+          </mat-form-field>
+          <div>
+            <button class="btn btn-dark btn-sm mt-3" (click)="disableFormControl($event)" name="passwordFormControl" style="border-radius: 0 10px 10px 0;" type="button">
+              <div class="btn-close btn-close-white"></div>
+            </button>
+          </div>
+        </div>
+        
+        <button (click)="updateEmailAndPassword()" style="width: 100%;" class="btn btn-success btn-sm mt-2">Actualizar Datos</button>
+
+      </div>
+      <div class="modal-footer">
+        <button (click)="clearInputs()" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+

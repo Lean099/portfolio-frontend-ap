@@ -22,12 +22,12 @@
             </div>
           </div>
   
-          <ng-template #tolTemplate>{{ d.value }}</ng-template>
+          <ng-template #tolTemplate>{{ d.percentage }}</ng-template>
           <div class="range w-75 mw-100" *ngIf="d.edit">
-            <input type="range" class="form-range customRange" [min]="this.min" [max]="this.max" [(ngModel)]="d.value" [tooltip]="tolTemplate" id="customRange" />
+            <input type="range" class="form-range customRange" [min]="this.min" [max]="this.max" [(ngModel)]="d.percentage" [tooltip]="tolTemplate" id="customRange" />
           </div>
           <div class="progress w-75 mw-100 mb-3" *ngIf="d.edit!=true">
-            <div class="progress-bar progress-bar-striped bg-dark" role="progressbar" aria-label="Basic example" [style.width]="d.value+'%'" aria-valuenow="d.value" aria-valuemin="0" aria-valuemax="100">{{ d.value }}%</div>
+            <div class="progress-bar progress-bar-striped bg-dark" role="progressbar" aria-label="Basic example" [style.width]="d.percentage+'%'" aria-valuenow="d.percentage" aria-valuemin="0" aria-valuemax="100">{{ d.percentage }}%</div>
           </div>
         </ng-container>
         

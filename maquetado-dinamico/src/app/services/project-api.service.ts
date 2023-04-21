@@ -46,8 +46,7 @@ export class ProjectApiService {
       linkProject: newProject.linkProject
     }, this.httpOptions);
   }
-
-  // Tendremos que cambiar el backend para este porque no se puede enviar un body con get, solo es con este
+  
   getAllUserProject() {
     return this._http.get(`${this.apiUrl}/api/project/all/${this.idLoggedUser}`,
     { headers: new HttpHeaders({ Authorization: `Bearer ${this.accesstoken}` }) })

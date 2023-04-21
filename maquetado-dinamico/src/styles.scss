@@ -34,6 +34,13 @@ $theme: mat.define-light-theme((
 // that you are using.
 @include mat.all-component-themes($theme);
 
+@import 'ngx-toastr/toastr';
+
+// Este estilo es para que el datapicker aparesca por encima del modal de bootstrap, el z-index del modal de bootrstrap es de 1055
+.cdk-overlay-container {
+  z-index: 1056 !important;
+}
+
 .editBtn{
   padding: 0;
 }
@@ -96,3 +103,35 @@ $theme: mat.define-light-theme((
   transition: .5s ease;
   filter: blur(1px);
 }
+
+// Overlay para el Experience y Education
+
+.overlayElement {
+  width: 110px;
+  height: 110px;
+  background-color: #8383837a;
+  border-radius: 5%;
+  opacity: 0;
+  transition: .5s ease;
+}
+
+.editBtnElement{
+  transition: .5s ease;
+  opacity: 0;
+}
+
+.containerElementPicture:hover .editBtnElement{
+  opacity: 1;
+  font-size: x-large;
+}
+
+.containerElementPicture:hover .overlayElement{
+  opacity: 1;
+}
+
+.containerElementPicture:hover img {
+  transition: .5s ease;
+  filter: blur(1px);
+}
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

@@ -42,12 +42,11 @@ export class EducationApiService {
     {
       institution: newEducation.institution,
       degree: newEducation.degree,
-      enddate: newEducation.endDate,
+      enddate: newEducation.enddate,
       idPicture: null
     }, this.httpOptions);
   }
 
-  // Tendremos que cambiar el backend para este porque no se puede enviar un body con get, solo es con este
   getAllUserEducation() {
     return this._http.get(`${this.apiUrl}/api/education/all/${this.idLoggedUser}`,
     { headers: new HttpHeaders({ Authorization: `Bearer ${this.accesstoken}` }) })
@@ -64,7 +63,7 @@ export class EducationApiService {
     {
       institution: newDataEducation.institution,
       degree: newDataEducation.degree,
-      enddate: newDataEducation.endDate
+      enddate: newDataEducation.enddate
     }, this.httpOptions);
   }
 

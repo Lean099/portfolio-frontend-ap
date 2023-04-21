@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { Address } from '../others/interfaces';
 import { environment } from '../environments/environment';
 import { ApiService } from './api.service';
+import { UserApiService } from './user-api.service';
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +25,8 @@ export class AddressApiService {
 
   constructor(
     private _http : HttpClient,
-    private _api : ApiService
+    private _api : ApiService,
+    private _user : UserApiService
   ) 
   {
     this._api.loginData$.subscribe(loginData => { 
@@ -43,7 +45,10 @@ export class AddressApiService {
       country: newAddress.country,
       city: newAddress.city,
       province: newAddress.province
-    }, this.httpOptions);
+    }, { headers: new HttpHeaders({
+      'Content-Type':  'application/json',
+      Authorization: `Bearer ${this.accesstoken}`
+    }) });
   }
 
   // Este esta mal, en vez de pasarle el id del address deberiamos pasarle el id del usuario para me traiga su direccion
@@ -54,14 +59,19 @@ export class AddressApiService {
   }
 
   // El id del address viene dentro del objeto (newDataAddress) que nos llega por parametro
-  updateAddress(newDataAddress: Address) : Observable<any>{
+  updateAddress(newDataAddress: Address){
     return this._http.post(`${this.apiUrl}/api/address/update`,
     {
       id: newDataAddress.id,
       country: newDataAddress.country,
       city: newDataAddress.city,
       province: newDataAddress.province
-    }, this.httpOptions);
+    }, { headers: new HttpHeaders({
+      'Content-Type':  'application/json',
+      Authorization: `Bearer ${this.accesstoken}`
+    }) }).subscribe(address => {
+      this._user.getUser()
+    });
   }
 
   // Tengo dudas aqui, podria pasarle el id del address o del usuario, la idea es que borre el address del usuario y no el address mismo de su db

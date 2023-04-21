@@ -1,56 +1,193 @@
 <div class="experiencia">
     <div class="d-flex justify-content-between">
       <h3>Experiencia</h3>
-      <button class="btn editBtn"><i class="fa-solid fa-plus"></i></button>
+      <!-- data-bs-toggle="modal" data-bs-target="#createNewExperienceModal" -->
+      <button class="btn editBtn" data-bs-toggle="modal" data-bs-target="#createNewExperienceModal"><i class="fa-solid fa-plus"></i></button>
     </div>
-    
-    <div class="card border-light mb-3" *ngFor="let d of data; let indexOfElemnt=$implicit">
+    <!--  -->
+    <div class="card border-light mb-3" *ngFor="let d of userWork; let indexOfElemnt=$implicit">
       <div class="row g-0">
         <div class="col-md-1">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg?20200913095930" class="img-fluid rounded-start" style="max-width: 110px;" alt="imagen-educacion">
+
+          <!-- No olvidar de cambiar los signos en los tres isLogged cuando use la API -->
+          <img *ngIf="!isLogged && !d.idPicture" src="{{image}}" class="img-fluid rounded-start mt-2" style="max-width: 110px;" alt="imagen-experiencia">
+          <img *ngIf="!isLogged && d.idPicture" src="{{d.idPicture?.url}}" class="img-fluid rounded-start mt-2" style="max-width: 110px;" alt="imagen-experiencia">
+          <div *ngIf="isLogged" class="containerElementPicture position-absolute mt-2">
+            <img *ngIf="!d.idPicture" src="{{image}}" class="img-fluid rounded-start position-absolute mt-2" style="max-width: 110px;" alt="imagen-experiencia">
+            <img *ngIf="d.idPicture"  src="{{d.idPicture?.url}}" class="img-fluid rounded-start position-absolute mt-2" style="max-width: 110px;" alt="imagen-experiencia">
+            <div class="overlayElement position-absolute mt-2">
+              <button class="btn editBtnElement editBtn position-absolute top-50 start-50 translate-middle" data-bs-toggle="modal" attr.data-bs-target="#editImageModal{{d.id}}"><i class="fa-solid fa-pen-to-square"></i></button>
+            </div>
+          </div>
+
         </div>
+        
         <div class="col-md-11">
           
           <!-- DATA -->
           <div class="card-body" *ngIf="this.d.edit!=true">
             <div class="d-flex justify-content-between">
-              <h5 class="card-title">{{ d.empresa }}</h5>
+              <h5 class="card-title">{{ d.company }}</h5>
               <div>
+                <!-- cambiar luego a toggleEdit -->
                 <button class="btn editBtn" (click)="toggleEdit(indexOfElemnt.id)"><i class="fa-solid fa-pen-to-square"></i></button>
-                <button class="btn editBtn ms-1"><i class="fa-solid fa-trash"></i></button>
+                <button class="btn editBtn ms-1" (click)="deleteWork(indexOfElemnt.id)"><i class="fa-solid fa-trash"></i></button>
               </div>
             </div>
-            <p class="card-text" >{{ d.puesto }}</p>
-            <p class="card-text"><small class="text-muted">{{ range.value.start | date : 'dd/MM/yyyy' }} - {{ range.value.end | date : 'dd/MM/yyyy' }}</small></p>
+            <p class="card-text" >{{ d.job }}</p>
+            <!-- *ngIf="!this.d.range.value.start" // *ngIf="this.d.range.value.start" -->
+            <!--<div *ngIf="d.range;else other_content">
+              <p *ngIf="!this.d.range.value.start" class="card-text"><small class="text-muted">--/--/--</small></p>
+              <p *ngIf="this.d.range.value.start" class="card-text"><small class="text-muted">{{ d.range.value.start | date : 'dd/MM/yyyy' }} - {{ d.range.value.end | date : 'dd/MM/yyyy' }}</small></p>
+            </div>
+            <ng-template #other_content>
+              <p *ngIf="!this.d.startdate" class="card-text"><small class="text-muted">--/--/--</small></p>
+              <p *ngIf="this.d.startdate" class="card-text"><small class="text-muted">{{ d.startdate | date : 'dd/MM/yyyy' }} - {{ d.enddate | date : 'dd/MM/yyyy' }}</small></p>
+            </ng-template>-->
+            <p *ngIf="!this.d.startdate" class="card-text"><small class="text-muted">--/--/--</small></p>
+            <p *ngIf="this.d.startdate" class="card-text"><small class="text-muted">{{ d.startdate | date : 'dd/MM/yyyy' }} - {{ d.enddate | date : 'dd/MM/yyyy' }}</small></p>
           </div>
   
           <!-- EDIT -->
           <div class="card-body" *ngIf="this.d.edit">
-            <div class="d-flex justify-content-between">
-              <div class="d-flex mb-3">
-                <input [(ngModel)]="d.empresa" class="form-control me-3" type="text">
-                <button class="btn btn-primary" (click)="toggleEdit(indexOfElemnt.id)">Edit</button>
-              </div>
-            </div>
-            <input [(ngModel)]="d.puesto" class="form-control mb-3" type="text">
-  
+            <!--
+            <input [(ngModel)]="d.company" class="form-control mb-2" type="text">
+            <input [(ngModel)]="d.job" class="form-control mb-3" type="text">
+            -->
+
+            <mat-form-field style="width: 100%;">
+              <mat-label>Empresa</mat-label>
+              <input type="text" matInput [formControl]="this.companyFormControl" [errorStateMatcher]="matcher" placeholder="Mi Empresa...">
+              <mat-error *ngIf="companyFormControl.hasError('required')">
+                Empresa es <strong>requerido</strong>
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field style="width: 100%;">
+              <mat-label>Puesto</mat-label>
+              <textarea matInput [formControl]="this.jobFormControl" [errorStateMatcher]="matcher"
+                   placeholder="Descripcion del trabajo"></textarea>
+              <mat-error *ngIf="jobFormControl.hasError('required')">
+              Descripcion del trabajo es <strong>requerido</strong>
+            </mat-error>
+            </mat-form-field>
+          
             <mat-form-field appearance="fill">
-              <mat-label>Enter a date range</mat-label>
+              <mat-label>Periodo de trabajo</mat-label>
               <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
-                <input matStartDate formControlName="start" placeholder="Start date">
-                <input matEndDate formControlName="end" placeholder="End date">
+                <input matStartDate formControlName="start" placeholder="Fecha Inicio">
+                <input matEndDate formControlName="end" placeholder="Fecha Salida">
               </mat-date-range-input>
               <mat-hint>DD/MM/YYYY – DD/MM/YYYY</mat-hint>
+              <mat-error *ngIf="range.get('start')?.hasError('required') || range.get('end')?.hasError('required')">
+                Fecha de inicio y de salida es <strong>requerido</strong>
+              </mat-error>
               <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
               <mat-date-range-picker #picker></mat-date-range-picker>
             
-              <mat-error *ngIf="range.controls.start.hasError('matStartDateInvalid')">Invalid start date</mat-error>
-              <mat-error *ngIf="range.controls.end.hasError('matEndDateInvalid')">Invalid end date</mat-error>
+              <mat-error *ngIf="range.controls.start.hasError('matStartDateInvalid')">Fecha de inicio incorrecta</mat-error>
+              <mat-error *ngIf="range.controls.end.hasError('matEndDateInvalid')">Fecha de salida incorrecta</mat-error>
             </mat-form-field>
+
+              <div class="d-flex mt-2" style="width: 50%;">
+                <!-- cambiar luego por toggleEdit -->
+                <button style="width: 50%;" class="btn btn-success me-1" (click)="editWork(indexOfElemnt.id)">Edit</button>
+                <button style="width: 50%;" class="btn btn-dark" (click)="toggleEdit(indexOfElemnt.id)">Cancel</button>
+              </div>
           </div>
   
         </div>
       </div>
+
+      <!-- Modal to edit expirience image -->
+      <div class="modal fade" [id]="'editImageModal'+d.id" tabindex="-1" aria-labelledby="experienceImageModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="experienceImageModalLabel">Actualizar la imagen de experiencia de {{d.company}}</h1>
+              <button (click)="resetInputFile()" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              
+              <div class="input-group">
+                <input class="form-control form-control-sm" (change)="onFileSelected($event)" type="file">
+                <button class="btn btn-dark btn-sm" (click)="resetInputFile()" type="button">
+                  <div class="btn-close btn-close-white"></div>
+                </button>
+              </div>
+
+              <button *ngIf="!d.idPicture" style="width: 100%;" (click)="updateWorkImage(d.id)" class="btn btn-success btn-sm mt-3">Actualizar Imagen</button>
+              <div *ngIf="d.idPicture" class="d-flex mt-3" style="width: 100%;">
+                <button style="width: 50%;" (click)="updateWorkImage(d.id)" class="btn btn-success btn-sm me-1">Actualizar Imagen</button>
+                <button style="width: 50%;" (click)="deleteWorkImage(d.id)" class="btn btn-danger btn-sm ms-1">Eliminar Imagen</button>
+              </div>
+              
+            </div>
+            <div class="modal-footer">
+              <button (click)="resetInputFile()" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
   
+</div>
+
+
+
+<!-- Modal to create new experience -->
+<div class="modal fade" id="createNewExperienceModal" tabindex="-1" aria-labelledby="expModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="expModalLabel">Agregar nueva experiencia</h1>
+        <button type="button" (click)="clearInputs()" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        
+        <form class="example-form">
+          <mat-form-field class="example-full-width">
+            <mat-label>Empresa</mat-label>
+            <input type="text" matInput [formControl]="companyFormControl" [errorStateMatcher]="matcher"
+                   placeholder="Mi empresa">
+            <mat-error *ngIf="companyFormControl.hasError('required')">
+              Empresa es <strong>requerido</strong>
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="example-full-width">
+            <mat-label>Puesto</mat-label>
+            <textarea matInput [formControl]="jobFormControl" [errorStateMatcher]="matcher"
+                   placeholder="Descripcion del trabajo"></textarea>
+            <mat-error *ngIf="jobFormControl.hasError('required')">
+              Descripcion del trabajo es <strong>requerido</strong>
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" class="example-full-width">
+            <mat-label>Introduzca fecha de inicio y de salida</mat-label>
+            <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
+              <input matStartDate formControlName="start" placeholder="Fecha inicio">
+              <input matEndDate formControlName="end" placeholder="Fecha salida">
+            </mat-date-range-input>
+            <mat-hint>DD/MM/YYYY – DD/MM/YYYY</mat-hint>
+            <mat-error *ngIf="range.get('start')?.hasError('required') || range.get('end')?.hasError('required')">
+              Fecha de inicio y de salida es <strong>requerido</strong>
+            </mat-error>
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-date-range-picker #picker></mat-date-range-picker>
+          
+            <mat-error *ngIf="range.controls.start.hasError('matStartDateInvalid')">Invalid start date</mat-error>
+            <mat-error *ngIf="range.controls.end.hasError('matEndDateInvalid')">Invalid end date</mat-error>
+          </mat-form-field>
+        </form>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" (click)="clearInputs()" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" (click)="addNewExperience()" class="btn btn-primary">Add</button>
+      </div>
+    </div>
+  </div>
 </div>

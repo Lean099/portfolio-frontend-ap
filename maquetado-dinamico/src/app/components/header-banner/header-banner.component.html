@@ -1,11 +1,15 @@
 <div class="card my-3 mx-2">
     <div class="containerBanner">
-      <img src="https://assets.hongkiat.com/uploads/minimalist-dekstop-wallpapers/4k/original/19.jpg?3" class="card-img-top img-fluid banner" alt="">
+      <!-- <img src="https://assets.hongkiat.com/uploads/minimalist-dekstop-wallpapers/4k/original/19.jpg?3" class="card-img-top img-fluid banner" alt=""> -->
+      <img *ngIf="!this.user?.idBannerPicture" src="{{defaultBannerImage}}" class="card-img-top img-fluid banner" alt="">
+      <img *ngIf="this.user?.idBannerPicture" src="{{this.user?.idBannerPicture?.url}}" class="card-img-top img-fluid banner" alt="">
       <button class="btn editBtnBanner editBtn position-absolute top-50 start-50 translate-middle" data-bs-toggle="modal" data-bs-target=".editBannerModal" (click)="changeModal('banner')"><i class="fa-solid fa-pen-to-square"></i></button>
     </div>
     <div class="card-body position-relative">
       <div class="containerProfilePicture position-absolute top-0 start-50 translate-middle">
-        <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" class="profilePicture position-absolute top-0 start-50 translate-middle" alt="profilePicture">
+        <!-- <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" class="profilePicture position-absolute top-0 start-50 translate-middle" alt="profilePicture"> -->
+        <img *ngIf="!this.user?.idProfilePicture" src="{{defaultProfileImage}}" class="profilePicture position-absolute top-0 start-50 translate-middle" alt="profilePicture">
+        <img *ngIf="this.user?.idProfilePicture" src="{{this.user?.idProfilePicture?.url}}" class="profilePicture position-absolute top-0 start-50 translate-middle" alt="profilePicture">
         <div class="overlay position-absolute top-0 start-50 translate-middle">
           <button class="btn editBtnProfilePicture editBtn position-absolute top-50 start-50 translate-middle" data-bs-toggle="modal" data-bs-target=".editProfilePictureModal" (click)="changeModal()"><i class="fa-solid fa-pen-to-square"></i></button>
         </div>
@@ -14,44 +18,156 @@
       <!-- DATA -->
       <div class="containerInfo" *ngIf="this.editInfo!=true">
         <div class="d-flex justify-content-between">
-          <h3 class="card-title">Leandro</h3>
+          <h2 class="card-title">{{this.user?.firstname}} {{this.user?.lastname}}</h2>
           <button class="btn editBtn" (click)="toggleEdit()"><i class="fa-solid fa-pen-to-square"></i></button>
         </div>
-        <p class="card-text">Estudiante de programacion web...</p>
-        <p class="card-text">Argentina...</p>
+        <p class="card-text" style="margin: 10px 0 10px 0">Email: {{ this.user?.email }}</p>
+        <p class="card-text" style="margin: 0 0 10px 0">Telefono: {{ this.user?.phone }}</p>
+        <p class="card-text" style="margin: 0 0 10px 0">Edad: {{ this.user?.dob | date: 'dd/MM/yyyy' }}</p>
+        <p class="card-text" style="margin: 0 0 10px 0">
+          Localidad: 
+          <span *ngIf="this.user?.address?.country">{{this.user?.address?.country?.name}}, </span>
+          <span *ngIf="this.user?.address?.province">{{this.user?.address?.province?.name}}, </span>
+          <span *ngIf="this.user?.address?.city">{{this.user?.address?.city?.name}}</span>
+        </p>
+        <p class="card-text">Links:
+          <!--<a class="btn editBtn" href="{{this.user?.githubUrl}}" target="_blank" rel="noreferrer" rel="noopener"><i class="fa-brands fa-linkedin" style="padding:0;font-size:30px;"></i></a>
+          <a class="btn editBtn ms-2" href="{{this.user?.linkedinUrl}}" target="_blank" rel="noreferrer" rel="noopener"><i class="fa-brands fa-github" style="padding:0;font-size:30px;"></i></a>
+          -->
+          <a *ngIf="this.user?.linkedinUrl" class="btn editBtn" href="{{this.user?.linkedinUrl}}" target="_blank" rel="noreferrer" rel="noopener"><i class="fa-brands fa-linkedin" style="padding:0;font-size:30px;"></i></a>
+          <a *ngIf="this.user?.githubUrl" class="btn editBtn ms-2" href="{{this.user?.githubUrl}}" target="_blank" rel="noreferrer" rel="noopener"><i class="fa-brands fa-github" style="padding:0;font-size:30px;"></i></a>
+        </p>
       </div>
       
       <!-- EDIT -->
       <div class="containerEditInfo" *ngIf="this.editInfo">
-        <div class="d-flex justify-content-between mb-2">
+
+        <div class="d-flex" id="infoUser">
+          <div class="d-flex flex-fill">
+            <mat-form-field style="width: 100%;">
+              <mat-label>Nombre</mat-label>
+              <input type="text" matInput [formControl]="this.forms.controls.firstnameFormControl" placeholder="Nombre">
+            </mat-form-field>
+            <div>
+              <button class="btn btn-dark btn-sm mt-3" (click)="disableFormControl($event)" name="firstnameFormControl" style="border-radius: 0 10px 10px 0;" type="button">
+                <div class="btn-close btn-close-white"></div>
+              </button>
+            </div>
+          </div>
+          <div class="d-flex flex-fill ms-2">
+            <mat-form-field style="width: 100%;">
+              <mat-label>Apellido</mat-label>
+              <input type="text" matInput [formControl]="this.forms.controls.lastnameFormControl" placeholder="Apellido">
+            </mat-form-field>
+            <div>
+              <button class="btn btn-dark btn-sm mt-3" (click)="disableFormControl($event)" name="lastnameFormControl" style="border-radius: 0 10px 10px 0;" type="button">
+                <div class="btn-close btn-close-white"></div>
+              </button>
+            </div>
+          </div>
+          <div class="d-flex flex-fill ms-2">
+            <mat-form-field style="width: 100%;">
+              <mat-label>Telefono</mat-label>
+              <input type="text" matInput [formControl]="this.forms.controls.phoneFormControl" placeholder="Telefono">
+            </mat-form-field>
+            <div>
+              <button class="btn btn-dark btn-sm mt-3" (click)="disableFormControl($event)" name="phoneFormControl" style="border-radius: 0 10px 10px 0;" type="button">
+                <div class="btn-close btn-close-white"></div>
+              </button>
+            </div>
+          </div>
+          <div class="d-flex flex-fill ms-2">
+            <mat-form-field appearance="fill" style="width: 100%;">
+              <mat-label>Fec. Nacimiento</mat-label>
+              <!-- #docregion toggle -->
+              <input matInput [matDatepicker]="picker" [formControl]="this.forms.controls.dobFormControl" placeholder="DD/MM/YYYY">
+              <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+              <!-- #enddocregion toggle -->
+              </mat-form-field>
+              <div>
+                <button class="btn btn-dark btn-sm mt-3" (click)="disableFormControl($event)" name="dobFormControl" style="border-radius: 0 10px 10px 0;" type="button">
+                  <div class="btn-close btn-close-white"></div>
+                </button>
+              </div>
+          </div>
+        </div>
+
+        <div class="d-flex" id="addressUser">
+          <div class="d-flex flex-fill">
+            <mat-form-field style="width: 100%;">
+              <mat-label>Pais</mat-label>
+              <input type="text" matInput [formControl]="this.formsAddress.controls.countryFormControl" placeholder="Pais">
+            </mat-form-field>
+            <div>
+              <button class="btn btn-dark btn-sm mt-3" (click)="disableFormControlAddress($event)" name="countryFormControl" style="border-radius: 0 10px 10px 0;" type="button">
+                <div class="btn-close btn-close-white"></div>
+              </button>
+            </div>
+          </div>
+          <div class="d-flex flex-fill ms-2">
+            <mat-form-field style="width: 100%;">
+              <mat-label>Provincia</mat-label>
+              <input type="text" matInput [formControl]="this.formsAddress.controls.provinceFormControl" placeholder="Provincia">
+            </mat-form-field>
+            <div>
+              <button class="btn btn-dark btn-sm mt-3" (click)="disableFormControlAddress($event)" name="provinceFormControl" style="border-radius: 0 10px 10px 0;" type="button">
+                <div class="btn-close btn-close-white"></div>
+              </button>
+            </div>
+          </div>
+          <div class="d-flex flex-fill ms-2">
+            <mat-form-field style="width: 100%;">
+              <mat-label>Ciudad</mat-label>
+              <input type="text" matInput [formControl]="this.formsAddress.controls.cityFormControl" placeholder="Ciudad">
+            </mat-form-field>
+            <div>
+              <button class="btn btn-dark btn-sm mt-3" (click)="disableFormControlAddress($event)" name="cityFormControl" style="border-radius: 0 10px 10px 0;" type="button">
+                <div class="btn-close btn-close-white"></div>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="d-flex" id="socialsUser">
+          <div class="d-flex flex-fill">
+            <mat-form-field style="width: 100%;">
+              <mat-label>Link Github</mat-label>
+              <input type="text" matInput [formControl]="this.forms.controls.githubFormControl" placeholder="GitHub">
+            </mat-form-field>
+            <div>
+              <button class="btn btn-dark btn-sm mt-3" (click)="disableFormControl($event)" name="githubFormControl" style="border-radius: 0 10px 10px 0;" type="button">
+                <div class="btn-close btn-close-white"></div>
+              </button>
+            </div>
+          </div>
+          <div class="d-flex flex-fill ms-2">
+            <mat-form-field style="width: 100%;">
+              <mat-label>Link LinkedIn</mat-label>
+              <input type="text" matInput [formControl]="this.forms.controls.linkedinFormControl" placeholder="LinkedIn">
+            </mat-form-field>
+            <div>
+              <button class="btn btn-dark btn-sm mt-3" (click)="disableFormControl($event)" name="linkedinFormControl" style="border-radius: 0 10px 10px 0;" type="button">
+                <div class="btn-close btn-close-white"></div>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!--<div class="d-flex justify-content-between mb-2">
           <div class="input-group">
             <input type="text" class="form-control" placeholder="Your full name...">
             <button class="btn btn-dark btn-sm" type="button">
               <div class="btn-close btn-close-white"></div>
             </button>
           </div>
-        </div>
-    
-        <div class="d-flex justify-content-between mb-2">
-          <div class="input-group">
-            <input type="text" class="form-control" placeholder="What's your profession?">
-            <button class="btn btn-dark btn-sm" type="button">
-              <div class="btn-close btn-close-white"></div>
-            </button>
-          </div>
-        </div>
-    
-        <div class="d-flex justify-content-between mb-2">
-          <div class="input-group">
-            <input type="text" class="form-control" placeholder="Location">
-            <button class="btn btn-dark btn-sm" type="button">
-              <div class="btn-close btn-close-white"></div>
-            </button>
-          </div>
-        </div>
+        </div>-->
     
         <div class="d-grid gap-2 col-6 mx-auto mt-3">
-          <button (click)="toggleEdit()" class="btn btn-primary" type="button">Edit information</button>
+          <div class="d-flex">
+            <button (click)="sendNewUpdatedData()" class="btn btn-primary me-1" type="button" style="width: 50%;">Actualizar Informacion</button>
+            <button (click)="toggleEdit()" class="btn btn-dark ms-1" type="button" style="width: 50%;">Cancelar</button>
+          </div>
         </div>
       </div>
     
@@ -65,40 +181,50 @@
         <!-- EDIT BANNER -->
         <div class="modal-content" *ngIf="this.editBanner">
           <div class="modal-header">
-            <h1 class="modal-title fs-5" id="modalUpdateImagesLabel">Update Banner</h1>
+            <h1 class="modal-title fs-5" id="modalUpdateImagesLabel">Actualizar Banner</h1>
             <button type="button" class="btn-close" (click)="resetInputFile()" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
             <div class="input-group">
-              <input class="form-control form-control-sm" [(ngModel)]="inputValue" id="formFileSm" type="file">
+              <input class="form-control form-control-sm" (change)="onFileSelected($event)" id="formFileSm" type="file">
               <button class="btn btn-dark btn-sm" (click)="resetInputFile()" type="button" id="formFileSm">
                 <div class="btn-close btn-close-white"></div>
               </button>
             </div>
+            <button *ngIf="!this.user?.idBannerPicture" style="width: 100%;" (click)="updateBannerOrProfilePicture('banner')" class="btn btn-success btn-sm mt-3">Actualizar Imagen</button>
+            <div *ngIf="this.user?.idBannerPicture" class="d-flex mt-3" style="width: 100%;">
+              <button style="width: 50%;" (click)="updateBannerOrProfilePicture('banner')" class="btn btn-success btn-sm me-1">Actualizar Imagen</button>
+              <button style="width: 50%;" (click)="deleteBannerOrProfilePicture('banner')" class="btn btn-danger btn-sm ms-1">Eliminar Imagen</button>
+            </div>
+
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" (click)="resetInputFile()" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Update</button>
           </div>
         </div>
     
         <!-- EDIT PROFILE PICTURE -->
         <div class="modal-content" *ngIf="this.editProfile">
           <div class="modal-header">
-            <h1 class="modal-title fs-5" id="modalUpdateImagesLabel">Update Profile Picture</h1>
+            <h1 class="modal-title fs-5" id="modalUpdateImagesLabel">Actualizar Imagen de Perfil</h1>
             <button type="button" class="btn-close" (click)="resetInputFile()" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
             <div class="input-group">
-              <input class="form-control form-control-sm" [(ngModel)]="inputValue" id="formFileSm" type="file">
+              <input class="form-control form-control-sm" (change)="onFileSelected($event)" id="formFileSm" type="file">
               <button class="btn btn-dark btn-sm" (click)="resetInputFile()" type="button" id="formFileSm">
                 <div class="btn-close btn-close-white"></div>
               </button>
             </div>
+            <button *ngIf="!this.user?.idProfilePicture" style="width: 100%;" (click)="updateBannerOrProfilePicture('profile')" class="btn btn-success btn-sm  mt-3">Actualizar Imagen</button>
+            <div *ngIf="this.user?.idProfilePicture" class="d-flex mt-3" style="width: 100%;">
+              <button style="width: 50%;" (click)="updateBannerOrProfilePicture('profile')" class="btn btn-success btn-sm me-1">Actualizar Imagen</button>
+              <button style="width: 50%;" (click)="deleteBannerOrProfilePicture('profile')" class="btn btn-danger btn-sm ms-1">Eliminar Imagen</button>
+            </div>
+            
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" (click)="resetInputFile()" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Update</button>
           </div>
         </div>
         

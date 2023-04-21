@@ -8,28 +8,37 @@
     <div class="card border-light mb-3" *ngFor="let d of data; let indexOfElemnt=$implicit">
       <div class="row g-0">
         <div class="col-md-1">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg?20200913095930" class="img-fluid rounded-start" style="max-width: 110px;" alt="imagen-educacion">
+
+          <img *ngIf="!d.idPicture" src="{{image}}" class="img-fluid rounded-start mt-2" style="max-width: 110px;" alt="imagen-educacion">
+          <div *ngIf="d.idPicture" class="containerElementPicture position-absolute mt-2">
+            <img src="{{d.idPicture}}" class="img-fluid rounded-start position-absolute mt-2" style="max-width: 110px;" alt="imagen-educacion">
+            <div class="overlayElement position-absolute mt-2">
+              <button class="btn editBtnElement editBtn position-absolute top-50 start-50 translate-middle" data-bs-toggle="modal" data-bs-target="#editEducationImageModal"><i class="fa-solid fa-pen-to-square"></i></button>
+            </div>
+          </div>
+
         </div>
         <div class="col-md-11">
   
           <!-- DATA -->
           <div class="card-body" *ngIf="this.d.edit!=true">
             <div class="d-flex justify-content-between">
-              <h5 class="card-title">{{ d.college }} - index: {{indexOfElemnt.id}}</h5>
+              <h5 class="card-title">{{ d.institution }} - index: {{indexOfElemnt.id}}</h5>
               <div>
                 <button class="btn editBtn" (click)="toggleEdit(indexOfElemnt.id)"><i class="fa-solid fa-pen-to-square"></i></button>
                 <button class="btn editBtn ms-1"><i class="fa-solid fa-trash"></i></button>
               </div>
             </div>
             <p class="card-text">{{ d.degree }}</p>
-            <p class="card-text"><small class="text-muted">--/--/--</small></p>
+            <p *ngIf="!this.d.endDate" class="card-text"><small class="text-muted">--/--/--</small></p>
+            <p *ngIf="this.d.endDate" class="card-text"><small class="text-muted">{{ d.endDate | date : 'dd/MM/yyyy' }}</small></p>
           </div>
   
           <!-- EDIT -->
           <div class="card-body" *ngIf="this.d.edit">
             <div class="d-flex justify-content-between">
               <div class="d-flex mb-3">
-                <input [(ngModel)]="d.college" class="form-control me-3" type="text">
+                <input [(ngModel)]="d.institution" class="form-control me-3" type="text">
                 <button class="btn btn-primary" (click)="toggleEdit(indexOfElemnt.id)">Edit</button>
               </div>
             </div>
@@ -38,7 +47,7 @@
             <mat-form-field appearance="fill">
             <mat-label>Choose a date</mat-label>
             <!-- #docregion toggle -->
-            <input matInput [matDatepicker]="picker">
+            <input matInput [matDatepicker]="picker" [(ngModel)]="this.d.endDate" placeholder="Choose a date">
             <mat-hint>DD/MM/YYYY</mat-hint>
             <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
@@ -50,3 +59,24 @@
       </div>
     </div>
 </div>
+
+<!-- Modal for edit education image -->
+<div class="modal fade" id="editEducationImageModal" tabindex="-1" aria-labelledby="educationImageModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="educationImageModalLabel">Modal title</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        ...asd
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal to create new education -->

@@ -19,6 +19,9 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { MomentDateModule } from '@angular/material-moment-adapter';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
+// Others
+import { ToastrModule } from 'ngx-toastr';
+
 @NgModule({
   imports: [
     BrowserModule,
@@ -28,7 +31,8 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
     MaterialModule, 
     BrowserAnimationsModule,
     MomentDateModule,
-    TooltipModule.forRoot()
+    TooltipModule.forRoot(),
+    ToastrModule.forRoot()
   ],
   declarations: [
     AppComponent,

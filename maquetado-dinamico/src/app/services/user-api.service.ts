@@ -3,13 +3,16 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ApiService } from './api.service';
 import { environment } from '../environments/environment'
-import { User } from '../others/interfaces';
+import { DefaultUser, User } from '../others/interfaces';
 
 interface UserPersonalInfo{
       firstname: string|null,
       lastname: string|null,
       dob: string|Date|null,
-      about: string|null
+      phone: string|null,
+      about: string|null,
+      githubUrl: string|null,
+      linkedinUrl: string|null
 }
 
 interface Credentials{
@@ -23,9 +26,10 @@ interface Credentials{
 export class UserApiService {
 
   private apiUrl : string = environment.apiUrl;
+  private defaultUserId : string = environment.defaultUserId;
   private accesstoken : string = "";
   private idLoggedUser : string = "";
-  private defaultDataUser = new BehaviorSubject<User|null>(null);
+  private defaultDataUser = new BehaviorSubject<DefaultUser|null>(null);
   defaultDataUser$ = this.defaultDataUser.asObservable();
   private user = new BehaviorSubject<User|null>(null);
   user$ = this.user.asObservable();
@@ -44,10 +48,13 @@ export class UserApiService {
     this._api.loginData$.subscribe(loginData => { 
       this.accesstoken = loginData.accessToken
       this.idLoggedUser = loginData.idUser
+      if(loginData.isLogged){
+        this.getUser()
+      }
     })
   }
 
-  updateDefaultDataUser(newUpdateDataUser: any){
+  updateDefaultDataUser(newUpdateDataUser: DefaultUser){
     this.defaultDataUser.next(newUpdateDataUser)
   }
 
@@ -56,7 +63,8 @@ export class UserApiService {
   }
 
   getDefaultUserData(){
-    this._http.get(`${this.apiUrl}/api/user/default`).subscribe(defaultUser => this.updateDefaultDataUser(defaultUser))
+    this._http.get(`${this.apiUrl}/api/user/defaultUser/${this.defaultUserId}`)
+    .subscribe(defaultUser => this.updateDefaultDataUser(defaultUser as DefaultUser))
     console.log(this.defaultDataUser.getValue())
   }
 
@@ -88,8 +96,14 @@ export class UserApiService {
       firstname: userPersonalInfo.firstname,
       lastname: userPersonalInfo.lastname,
       dob: userPersonalInfo.dob,
-      about: userPersonalInfo.about
-    }, this.httpOptions).subscribe(updatedUser => this.updateUser(updatedUser));
+      phone: userPersonalInfo.phone,
+      about: userPersonalInfo.about,
+      githubUrl: userPersonalInfo.githubUrl,
+      linkedinUrl: userPersonalInfo.linkedinUrl
+    }, { headers: new HttpHeaders({
+      'Content-Type':  'application/json',
+      Authorization: `Bearer ${this.accesstoken}`
+    }) }).subscribe(updatedUser => this.updateUser(updatedUser));
     // Una vez actualize el usuario asi sea un pequeño dato el componente al estar subscripto recibira automaticamente la actualizacion
   }
 
@@ -99,7 +113,10 @@ export class UserApiService {
       id: this.idLoggedUser,
       email: credentials.email,
       password: credentials.password
-    }, this.httpOptions).subscribe(updatedUser => this.updateUser(updatedUser));
+    }, { headers: new HttpHeaders({
+      'Content-Type':  'application/json',
+      Authorization: `Bearer ${this.accesstoken}`
+    }) }).subscribe(updatedUser => this.updateUser(updatedUser));
   }
     // Una vez actualize el usuario asi sea un pequeño dato el componente al estar subscripto recibira automaticamente la actualizacion
 }
