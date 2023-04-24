@@ -18,11 +18,10 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
   templateUrl: './header-social-media-bar.component.html',
   styleUrls: ['./header-social-media-bar.component.css']
 })
-export class HeaderSocialMediaBarComponent implements OnInit{
+export class HeaderSocialMediaBarComponent {
 
-  data : any;
-  user : any;
-
+  isLogged : boolean = false;
+  
   forms = new FormGroup({
     emailFormControl : new FormControl('', [Validators.required]),
     passwordFormControl : new FormControl('', [Validators.required])
@@ -35,11 +34,8 @@ export class HeaderSocialMediaBarComponent implements OnInit{
     private _user : UserApiService
     //@Inject(DOCUMENT) private document: Document,
     //private el : ElementRef
-  ){}
-
-  ngOnInit(){
-    this._api.loginData$.subscribe(data => this.data = data)
-    console.log(this.data)
+  ){
+    this._api.loginData$.subscribe(loginData => this.isLogged = loginData.isLogged)
   }
 
   disableFormControl(e : any){

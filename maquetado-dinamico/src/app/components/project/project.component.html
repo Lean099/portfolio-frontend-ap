@@ -2,21 +2,23 @@
     <div class="card-body">
       <div class="d-flex justify-content-between">
         <h3>Proyectos</h3>
-        <button class="btn editBtn"><i class="fa-solid fa-plus"></i></button>
+        <button *ngIf="this.isLogged" class="btn editBtn" data-bs-toggle="modal" data-bs-target="#createNewProjectModal"><i class="fa-solid fa-plus"></i></button>
       </div>
-        <div class="card border-light" *ngFor="let d of data; let indexOfElement=$implicit">
+        <div class="card border-light" *ngFor="let d of userProject; let indexOfElement=$implicit">
   
           <!-- DATA -->
           <div class="card-body" *ngIf="d.edit!=true">
             <div class="d-flex justify-content-between">
               <h5 class="card-title text-primary">
                 {{ d.name }} 
-                <a class="btn btn-dark btn-sm ms-2" role="button" href="{{d.linkGithub}}" target="_blank" rel="noreferrer" rel="noopener">Link Github</a> 
-                <a class="btn btn-warning btn-sm ms-2" role="button" href="{{d.linkProject}}" target="_blank" rel="noreferrer" rel="noopener">Link Project</a>
+                <a *ngIf="d.linkGithub" class="btn btn-dark btn-sm ms-2" role="button" href="{{d.linkGithub}}" target="_blank" rel="noreferrer" rel="noopener">Link Github</a> 
+                <a *ngIf="!d.linkGithub" class="btn btn-dark btn-sm ms-2 disabled" role="button" href="#" target="_blank" rel="noreferrer" rel="noopener">Link Github</a> 
+                <a *ngIf="d.linkProject" class="btn btn-warning btn-sm ms-2" role="button" href="{{d.linkProject}}" target="_blank" rel="noreferrer" rel="noopener">Link Project</a>
+                <a *ngIf="!d.linkProject" class="btn btn-warning btn-sm ms-2 disabled" role="button" href="#" target="_blank" rel="noreferrer" rel="noopener">Link Project</a>
               </h5>
               <div>
-                <button class="btn editBtn" (click)="toggleEdit(indexOfElement.id)"><i class="fa-solid fa-pen-to-square"></i></button>
-                <button class="btn editBtn ms-1"><i class="fa-solid fa-trash"></i></button>
+                <button *ngIf="this.isLogged" class="btn editBtn" (click)="toggleEdit(indexOfElement.id)"><i class="fa-solid fa-pen-to-square"></i></button>
+                <button *ngIf="this.isLogged" class="btn editBtn ms-1" (click)="deleteProject(indexOfElement.id)"><i class="fa-solid fa-trash"></i></button>
               </div>
             </div>
             <p class="card-text">{{ d.description }}</p>
@@ -24,17 +26,99 @@
   
           <!-- EDIT -->
           <div class="card-body" *ngIf="d.edit">
-            <div class="d-flex justify-content-between">
-              <input type="text" class="form-control mb-2" [(ngModel)]="d.name" placeholder="Name project">
-              <div class="ms-2">
-                <button class="btn btn-primary" (click)="toggleEdit(indexOfElement.id)">Edit</button>
+            <!--
+              <div class="d-flex justify-content-between">
+                <input type="text" class="form-control mb-2" [(ngModel)]="d.name" placeholder="Name project">
+                <div class="ms-2">
+                  <button class="btn btn-primary" (click)="toggleEdit(indexOfElement.id)">Editar</button>
+                </div>
               </div>
+              <textarea class="form-control mb-2" [(ngModel)]="d.description" rows="1" placeholder="Project description"></textarea>
+              <input type="text" class="form-control mb-2" [(ngModel)]="d.linkGithub" placeholder="Link Github Project">
+              <input type="text" class="form-control" [(ngModel)]="d.linkProject" placeholder="Link Project">
+            -->
+            <mat-form-field style="width: 100%;">
+              <mat-label>Nombre Proyecto</mat-label>
+              <input type="text" matInput [formControl]="this.forms.controls.nameFormControl" [errorStateMatcher]="matcher" placeholder="Mi Proyecto...">
+              <mat-error *ngIf="this.forms.controls.nameFormControl.hasError('required')">
+                Nombre Proyecto es <strong>requerido</strong>
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field style="width: 100%;">
+              <mat-label>Descripcion</mat-label>
+              <textarea matInput [formControl]="this.forms.controls.descriptionFormControl" [errorStateMatcher]="matcher" 
+                        placeholder="Descripcion del proyecto"></textarea>
+              <mat-error *ngIf="this.forms.controls.descriptionFormControl.hasError('required')">
+                Descripcion del proyecto es <strong>requerido</strong>
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field style="width: 100%;">
+              <mat-label>Link GitHub</mat-label>
+              <input type="text" matInput [formControl]="this.forms.controls.linkGithubFormControl" [errorStateMatcher]="matcher" placeholder="www.github.com/miproyecto">
+            </mat-form-field>
+
+            <mat-form-field style="width: 100%;">
+              <mat-label>Link Proyecto</mat-label>
+              <input type="text" matInput [formControl]="this.forms.controls.linkProjectFormControl" [errorStateMatcher]="matcher" placeholder="www.vercel.com/miproyecto">
+            </mat-form-field>
+
+            <div class="d-flex mt-2" style="width: 50%;">
+              <button style="width: 50%;" class="btn btn-success me-1" (click)="editProject(indexOfElement.id)">Editar</button>
+              <button style="width: 50%;" class="btn btn-dark" (click)="toggleEdit(indexOfElement.id)">Cancelar</button>
             </div>
-            <textarea class="form-control mb-2" [(ngModel)]="d.description" rows="1" placeholder="Project description"></textarea>
-            <input type="text" class="form-control mb-2" [(ngModel)]="d.linkGithub" placeholder="Link Github Project">
-            <input type="text" class="form-control" [(ngModel)]="d.linkProject" placeholder="Link Project">
+
           </div>
   
         </div>
     </div>
+</div>
+
+<!-- Modal to create new experience -->
+<div class="modal fade" id="createNewProjectModal" tabindex="-1" aria-labelledby="proModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="proModalLabel">Agregar nuevo proyecto</h1>
+        <button type="button" (click)="clearInputs()" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        
+        <form class="example-form">
+          <mat-form-field class="example-full-width">
+            <mat-label>Nombre Proyecto</mat-label>
+            <input type="text" matInput [formControl]="this.forms.controls.nameFormControl" [errorStateMatcher]="matcher" placeholder="Mi Proyecto...">
+            <mat-error *ngIf="this.forms.controls.nameFormControl.hasError('required')">
+              Nombre Proyecto es <strong>requerido</strong>
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="example-full-width">
+            <mat-label>Descripcion</mat-label>
+            <textarea matInput [formControl]="this.forms.controls.descriptionFormControl" [errorStateMatcher]="matcher" 
+                      placeholder="Descripcion del proyecto"></textarea>
+            <mat-error *ngIf="this.forms.controls.descriptionFormControl.hasError('required')">
+              Descripcion del proyecto es <strong>requerido</strong>
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="example-full-width">
+            <mat-label>Link GitHub</mat-label>
+            <input type="text" matInput [formControl]="this.forms.controls.linkGithubFormControl" [errorStateMatcher]="matcher" placeholder="www.github.com/miproyecto">
+          </mat-form-field>
+
+          <mat-form-field class="example-full-width">
+            <mat-label>Link Proyecto</mat-label>
+            <input type="text" matInput [formControl]="this.forms.controls.linkProjectFormControl" [errorStateMatcher]="matcher" placeholder="www.vercel.com/miproyecto">
+          </mat-form-field>
+        </form>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" (click)="clearInputs()" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        <button type="button" (click)="addNewProject()" class="btn btn-primary">Agregar</button>
+      </div>
+    </div>
+  </div>
 </div>

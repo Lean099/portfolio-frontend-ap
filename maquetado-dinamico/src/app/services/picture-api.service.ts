@@ -43,9 +43,9 @@ export class PictureApiService {
     this._work.allUserWork$.subscribe(allWork =>{
       this.allUserWork = allWork as Work[]
     })
-    /*this._education.allUserEducation$.subscribe(allEducation =>{
+    this._education.allUserEducation$.subscribe(allEducation =>{
       this.allUserEducation = allEducation as Education[]
-    })*/
+    })
   }
 
   updateBannerAndProfilePicture(bannerAndProfilePicture: Array<Picture>){

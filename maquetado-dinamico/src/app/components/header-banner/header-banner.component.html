@@ -1,12 +1,20 @@
 <div class="card my-3 mx-2">
-    <div class="containerBanner">
+    <div *ngIf="!this.isLogged" class="">
+      <img *ngIf="!this.user?.idBannerPicture" src="{{defaultBannerImage}}" class="card-img-top img-fluid banner" alt="">
+      <img *ngIf="this.user?.idBannerPicture" src="{{this.user?.idBannerPicture?.url}}" class="card-img-top img-fluid banner" alt="">
+    </div>
+    <div *ngIf="this.isLogged" class="containerBanner">
       <!-- <img src="https://assets.hongkiat.com/uploads/minimalist-dekstop-wallpapers/4k/original/19.jpg?3" class="card-img-top img-fluid banner" alt=""> -->
       <img *ngIf="!this.user?.idBannerPicture" src="{{defaultBannerImage}}" class="card-img-top img-fluid banner" alt="">
       <img *ngIf="this.user?.idBannerPicture" src="{{this.user?.idBannerPicture?.url}}" class="card-img-top img-fluid banner" alt="">
       <button class="btn editBtnBanner editBtn position-absolute top-50 start-50 translate-middle" data-bs-toggle="modal" data-bs-target=".editBannerModal" (click)="changeModal('banner')"><i class="fa-solid fa-pen-to-square"></i></button>
     </div>
     <div class="card-body position-relative">
-      <div class="containerProfilePicture position-absolute top-0 start-50 translate-middle">
+      <div *ngIf="!this.isLogged" class="">
+        <img *ngIf="!this.user?.idProfilePicture" src="{{defaultProfileImage}}" class="profilePicture position-absolute top-0 start-50 translate-middle" alt="profilePicture">
+        <img *ngIf="this.user?.idProfilePicture" src="{{this.user?.idProfilePicture?.url}}" class="profilePicture position-absolute top-0 start-50 translate-middle" alt="profilePicture">
+      </div>
+      <div *ngIf="this.isLogged" class="containerProfilePicture position-absolute top-0 start-50 translate-middle">
         <!-- <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" class="profilePicture position-absolute top-0 start-50 translate-middle" alt="profilePicture"> -->
         <img *ngIf="!this.user?.idProfilePicture" src="{{defaultProfileImage}}" class="profilePicture position-absolute top-0 start-50 translate-middle" alt="profilePicture">
         <img *ngIf="this.user?.idProfilePicture" src="{{this.user?.idProfilePicture?.url}}" class="profilePicture position-absolute top-0 start-50 translate-middle" alt="profilePicture">
@@ -19,7 +27,7 @@
       <div class="containerInfo" *ngIf="this.editInfo!=true">
         <div class="d-flex justify-content-between">
           <h2 class="card-title">{{this.user?.firstname}} {{this.user?.lastname}}</h2>
-          <button class="btn editBtn" (click)="toggleEdit()"><i class="fa-solid fa-pen-to-square"></i></button>
+          <button *ngIf="this.isLogged" class="btn editBtn" (click)="toggleEdit()"><i class="fa-solid fa-pen-to-square"></i></button>
         </div>
         <p class="card-text" style="margin: 10px 0 10px 0">Email: {{ this.user?.email }}</p>
         <p class="card-text" style="margin: 0 0 10px 0">Telefono: {{ this.user?.phone }}</p>
@@ -199,7 +207,7 @@
 
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" (click)="resetInputFile()" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-secondary" (click)="resetInputFile()" data-bs-dismiss="modal">Cerrar</button>
           </div>
         </div>
     
@@ -224,7 +232,7 @@
             
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" (click)="resetInputFile()" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-secondary" (click)="resetInputFile()" data-bs-dismiss="modal">Cerrar</button>
           </div>
         </div>
         

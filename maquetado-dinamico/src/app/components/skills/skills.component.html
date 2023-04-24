@@ -2,30 +2,47 @@
     <div class="card-body">
       <div class="d-flex justify-content-between">
         <h3>Hard Skills & Soft Skills</h3>
-        <button class="btn editBtn"><i class="fa-solid fa-plus"></i></button>
+        <button *ngIf="this.isLogged" class="btn editBtn" data-bs-toggle="modal" data-bs-target="#createNewSkillModal"><i class="fa-solid fa-plus"></i></button>
       </div>
       <div class="d-flex flex-column align-items-center">
   
-        <ng-container *ngFor="let d of data; let indexOfElemnt=$implicit">
+        <ng-container *ngFor="let d of userSkill; let indexOfElement=$implicit">
           <div class="d-flex">
             <div *ngIf="d.edit">
               <div class="d-flex justify-content-between mb-2" >
+                <!--
                 <div><input type="text" [(ngModel)]="d.skillName" class="form-control form-control-sm"></div>
-                <button class="btn btn-primary btn-sm ms-2" (click)="toggleEdit(indexOfElemnt.id)">Edit</button>
+                <button class="btn btn-primary btn-sm ms-2" (click)="toggleEdit(indexOfElement.id)">Edit</button>
+                -->
+                <mat-form-field class="example-full-width" style="width: 300px">
+                  <mat-label>Nombre Habilidad</mat-label>
+                  <input type="text" matInput [formControl]="this.forms.controls.nameSkillFormControl" placeholder="Nombre">
+                  <mat-error *ngIf="this.forms.controls.nameSkillFormControl.hasError('required')">
+                    Nombre de habilidad es <strong>requerido</strong>
+                  </mat-error>
+                </mat-form-field>
+                <div>
+                  <button class="btn btn-success btn-sm ms-2 mt-3" (click)="editSkill(indexOfElement.id)">Editar</button>
+                  <button class="btn btn-dark btn-sm ms-2 mt-3" (click)="toggleEdit(indexOfElement.id)">Cancelar</button>
+                </div>
+
               </div>
             </div>
           
             <p *ngIf="d.edit!=true">{{ d.skillName }}</p>
             <div class="ms-3" *ngIf="d.edit!=true">
-              <button class="btn editBtn" (click)="toggleEdit(indexOfElemnt.id)"><i class="fa-solid fa-pen-to-square"></i></button>
-              <button class="btn editBtn ms-1"><i class="fa-solid fa-trash"></i></button>
+              <button *ngIf="this.isLogged" class="btn editBtn" (click)="toggleEdit(indexOfElement.id)"><i class="fa-solid fa-pen-to-square"></i></button>
+              <button *ngIf="this.isLogged" class="btn editBtn ms-1" (click)="deleteSkill(indexOfElement.id)"><i class="fa-solid fa-trash"></i></button>
             </div>
           </div>
   
-          <ng-template #tolTemplate>{{ d.percentage }}</ng-template>
+          <mat-slider *ngIf="d.edit" min="0" max="100" step="1" showTickMarks discrete [displayWith]="formatLabel" style="width: 73%;">
+            <input matSliderThumb [formControl]="this.forms.controls.percentageFormControl">
+          </mat-slider>
+          <!--<ng-template #tolTemplate>{{ d.percentage }}</ng-template>
           <div class="range w-75 mw-100" *ngIf="d.edit">
             <input type="range" class="form-range customRange" [min]="this.min" [max]="this.max" [(ngModel)]="d.percentage" [tooltip]="tolTemplate" id="customRange" />
-          </div>
+          </div>-->
           <div class="progress w-75 mw-100 mb-3" *ngIf="d.edit!=true">
             <div class="progress-bar progress-bar-striped bg-dark" role="progressbar" aria-label="Basic example" [style.width]="d.percentage+'%'" aria-valuenow="d.percentage" aria-valuemin="0" aria-valuemax="100">{{ d.percentage }}%</div>
           </div>
@@ -33,6 +50,38 @@
         
       </div>
     </div>
+</div>
+
+<!-- create New Skill MODAL -->
+<div class="modal fade" id="createNewSkillModal" tabindex="-1" aria-labelledby="skiModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="skiModalLabel">Agregar nueva habilidad</h1>
+        <button type="button" (click)="clearInputs()" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        
+        <mat-form-field class="example-full-width" style="width: 100%;">
+          <mat-label>Nombre Habilidad</mat-label>
+          <input type="text" matInput [formControl]="this.forms.controls.nameSkillFormControl" placeholder="Nombre">
+          <mat-error *ngIf="this.forms.controls.nameSkillFormControl.hasError('required')">
+            Nombre de habilidad es <strong>requerido</strong>
+          </mat-error>
+        </mat-form-field>
+
+        <p class="fw-light"  style="margin: 0;">Porcentaje</p>
+        <mat-slider min="0" max="100" step="1" showTickMarks discrete [displayWith]="formatLabel" style="width: 97%;">
+          <input matSliderThumb [formControl]="this.forms.controls.percentageFormControl">
+        </mat-slider>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" (click)="clearInputs()" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        <button type="button" (click)="addNewSkill()" class="btn btn-primary">Agregar</button>
+      </div>
+    </div>
+  </div>
 </div>
   
   

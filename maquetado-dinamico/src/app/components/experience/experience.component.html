@@ -2,10 +2,10 @@
     <div class="d-flex justify-content-between">
       <h3>Experiencia</h3>
       <!-- data-bs-toggle="modal" data-bs-target="#createNewExperienceModal" -->
-      <button class="btn editBtn" data-bs-toggle="modal" data-bs-target="#createNewExperienceModal"><i class="fa-solid fa-plus"></i></button>
+      <button *ngIf="this.isLogged" class="btn editBtn" data-bs-toggle="modal" data-bs-target="#createNewExperienceModal"><i class="fa-solid fa-plus"></i></button>
     </div>
     <!--  -->
-    <div class="card border-light mb-3" *ngFor="let d of userWork; let indexOfElemnt=$implicit">
+    <div class="card border-light mb-3" *ngFor="let d of userWork; let indexOfElement=$implicit">
       <div class="row g-0">
         <div class="col-md-1">
 
@@ -30,8 +30,8 @@
               <h5 class="card-title">{{ d.company }}</h5>
               <div>
                 <!-- cambiar luego a toggleEdit -->
-                <button class="btn editBtn" (click)="toggleEdit(indexOfElemnt.id)"><i class="fa-solid fa-pen-to-square"></i></button>
-                <button class="btn editBtn ms-1" (click)="deleteWork(indexOfElemnt.id)"><i class="fa-solid fa-trash"></i></button>
+                <button *ngIf="this.isLogged" class="btn editBtn" (click)="toggleEdit(indexOfElement.id)"><i class="fa-solid fa-pen-to-square"></i></button>
+                <button *ngIf="this.isLogged" class="btn editBtn ms-1" (click)="deleteWork(indexOfElement.id)"><i class="fa-solid fa-trash"></i></button>
               </div>
             </div>
             <p class="card-text" >{{ d.job }}</p>
@@ -91,8 +91,8 @@
 
               <div class="d-flex mt-2" style="width: 50%;">
                 <!-- cambiar luego por toggleEdit -->
-                <button style="width: 50%;" class="btn btn-success me-1" (click)="editWork(indexOfElemnt.id)">Edit</button>
-                <button style="width: 50%;" class="btn btn-dark" (click)="toggleEdit(indexOfElemnt.id)">Cancel</button>
+                <button style="width: 50%;" class="btn btn-success me-1" (click)="editWork(indexOfElement.id)">Editar</button>
+                <button style="width: 50%;" class="btn btn-dark" (click)="toggleEdit(indexOfElement.id)">Cancelar</button>
               </div>
           </div>
   
@@ -124,7 +124,7 @@
               
             </div>
             <div class="modal-footer">
-              <button (click)="resetInputFile()" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button (click)="resetInputFile()" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
             </div>
           </div>
         </div>
@@ -185,8 +185,8 @@
 
       </div>
       <div class="modal-footer">
-        <button type="button" (click)="clearInputs()" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" (click)="addNewExperience()" class="btn btn-primary">Add</button>
+        <button type="button" (click)="clearInputs()" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        <button type="button" (click)="addNewExperience()" class="btn btn-primary">Agregar</button>
       </div>
     </div>
   </div>

@@ -30,6 +30,9 @@ export class SkillApiService {
     this._api.loginData$.subscribe(loginData => { 
       this.accesstoken = loginData.accessToken
       this.idLoggedUser = loginData.idUser
+      if(loginData.isLogged){
+        this.getAllUserSkill()
+      }
     })
   }
 
@@ -37,12 +40,15 @@ export class SkillApiService {
     this.allUserSkill.next(allSkill);
   }
 
-  createSkill(newSkill: Skill) : Observable<any>{
+  createSkill(newSkill: Skill){
     return this._http.post(`${this.apiUrl}/api/skill/create/${this.idLoggedUser}`,
     {
       skillName: newSkill.skillName,
       percentage: newSkill.percentage
-    }, this.httpOptions);
+    }, { headers: new HttpHeaders({'Content-Type':  'application/json', Authorization: `Bearer ${this.accesstoken}`}) }).subscribe(newSkillSaved =>{
+      this.allUserSkill.value?.push(newSkillSaved as Skill)
+      this.updateAllUserSkill(this.allUserSkill.value as Array<Skill>)
+    })
   }
 
   getAllUserSkill() {
@@ -56,17 +62,34 @@ export class SkillApiService {
     { headers: new HttpHeaders({ Authorization: `Bearer ${this.accesstoken}` }) });
   }
 
-  updateSkill(idSkill: string, newDataSkill: Skill) : Observable<any>{
+  updateSkill(idSkill: string, newDataSkill: Skill){
     return this._http.post(`${this.apiUrl}/api/skill/update/${idSkill}`,
     {
       skillName: newDataSkill.skillName,
       percentage: newDataSkill.percentage
-    }, this.httpOptions);
+    }, { headers: new HttpHeaders({'Content-Type':  'application/json', Authorization: `Bearer ${this.accesstoken}`}) }).subscribe(updatedSkill =>{
+      let s = updatedSkill as Skill
+      if(this.allUserSkill.value){
+        for (let index = 0; index < this.allUserSkill.value?.length; index++) {
+          if(this.allUserSkill.value[index].id === s.id){
+            this.allUserSkill.value[index].skillName = s.skillName
+            this.allUserSkill.value[index].percentage = s.percentage
+            break;
+          }
+        }
+      }
+      this.updateAllUserSkill(this.allUserSkill.value as Array<Skill>)
+    });
   }
 
-  deleteSkill(idSkill: string) : Observable<any>{
+  deleteSkill(idSkill: string){
     return this._http.delete(`${this.apiUrl}/api/skill/delete/${idSkill}`,
-    { headers: new HttpHeaders({ Authorization: `Bearer ${this.accesstoken}` }) });
+    { headers: new HttpHeaders({ Authorization: `Bearer ${this.accesstoken}` }) }).subscribe(message => {
+      let index = this.allUserSkill.value?.findIndex(obj => obj.id === idSkill)
+      if(index!==-1){
+        this.updateAllUserSkill(this.allUserSkill.getValue()?.filter(obj => obj.id!==idSkill) as Array<Skill>)
+      }
+    });
   }
 
 }

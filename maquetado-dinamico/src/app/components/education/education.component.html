@@ -1,19 +1,22 @@
 <div class="educacion">
     <div class="d-flex justify-content-between">
       <h3>Educacion</h3>
-      <button class="btn editBtn"><i class="fa-solid fa-plus"></i></button>
+      <button *ngIf="this.isLogged" class="btn editBtn" data-bs-toggle="modal" data-bs-target="#createNewEducationModal"><i class="fa-solid fa-plus"></i></button>
     </div>
     <!---->
   
-    <div class="card border-light mb-3" *ngFor="let d of data; let indexOfElemnt=$implicit">
+    <div class="card border-light mb-3" *ngFor="let d of userEducation; let indexOfElement=$implicit">
       <div class="row g-0">
         <div class="col-md-1">
 
-          <img *ngIf="!d.idPicture" src="{{image}}" class="img-fluid rounded-start mt-2" style="max-width: 110px;" alt="imagen-educacion">
-          <div *ngIf="d.idPicture" class="containerElementPicture position-absolute mt-2">
-            <img src="{{d.idPicture}}" class="img-fluid rounded-start position-absolute mt-2" style="max-width: 110px;" alt="imagen-educacion">
+          
+          <img *ngIf="!isLogged && !d.idPicture" src="{{image}}" class="img-fluid rounded-start mt-2" style="max-width: 110px;" alt="imagen-educacion">
+          <img *ngIf="!isLogged && d.idPicture" src="{{d.idPicture?.url}}" class="img-fluid rounded-start mt-2" style="max-width: 110px;" alt="imagen-educacion">
+          <div *ngIf="isLogged" class="containerElementPicture position-absolute mt-2">
+            <img *ngIf="!d.idPicture" src="{{image}}" class="img-fluid rounded-start position-absolute mt-2" style="max-width: 110px;" alt="imagen-educacion">
+            <img *ngIf="d.idPicture"  src="{{d.idPicture?.url}}" class="img-fluid rounded-start position-absolute mt-2" style="max-width: 110px;" alt="imagen-educacion">
             <div class="overlayElement position-absolute mt-2">
-              <button class="btn editBtnElement editBtn position-absolute top-50 start-50 translate-middle" data-bs-toggle="modal" data-bs-target="#editEducationImageModal"><i class="fa-solid fa-pen-to-square"></i></button>
+              <button class="btn editBtnElement editBtn position-absolute top-50 start-50 translate-middle" data-bs-toggle="modal" attr.data-bs-target="#editEducationImageModal{{d.id}}"><i class="fa-solid fa-pen-to-square"></i></button>
             </div>
           </div>
 
@@ -23,60 +26,146 @@
           <!-- DATA -->
           <div class="card-body" *ngIf="this.d.edit!=true">
             <div class="d-flex justify-content-between">
-              <h5 class="card-title">{{ d.institution }} - index: {{indexOfElemnt.id}}</h5>
+              <h5 class="card-title">{{ d.institution }}</h5>
               <div>
-                <button class="btn editBtn" (click)="toggleEdit(indexOfElemnt.id)"><i class="fa-solid fa-pen-to-square"></i></button>
-                <button class="btn editBtn ms-1"><i class="fa-solid fa-trash"></i></button>
+                <button *ngIf="this.isLogged" class="btn editBtn" (click)="toggleEdit(indexOfElement.id)"><i class="fa-solid fa-pen-to-square"></i></button>
+                <button *ngIf="this.isLogged" class="btn editBtn ms-1" (click)="deleteEducation(indexOfElement.id)"><i class="fa-solid fa-trash"></i></button>
               </div>
             </div>
             <p class="card-text">{{ d.degree }}</p>
-            <p *ngIf="!this.d.endDate" class="card-text"><small class="text-muted">--/--/--</small></p>
-            <p *ngIf="this.d.endDate" class="card-text"><small class="text-muted">{{ d.endDate | date : 'dd/MM/yyyy' }}</small></p>
+            <p *ngIf="!this.d.enddate" class="card-text"><small class="text-muted">--/--/--</small></p>
+            <p *ngIf="this.d.enddate" class="card-text"><small class="text-muted">{{ d.enddate | date : 'dd/MM/yyyy' }}</small></p>
           </div>
   
           <!-- EDIT -->
           <div class="card-body" *ngIf="this.d.edit">
-            <div class="d-flex justify-content-between">
-              <div class="d-flex mb-3">
-                <input [(ngModel)]="d.institution" class="form-control me-3" type="text">
-                <button class="btn btn-primary" (click)="toggleEdit(indexOfElemnt.id)">Edit</button>
-              </div>
-            </div>
+            <!--
+            <input [(ngModel)]="d.institution" class="form-control me-3" type="text">
+            <button class="btn btn-primary" (click)="toggleEdit(indexOfElement.id)">Edit</button>
             <input [(ngModel)]="d.degree" class="form-control mb-3" type="text">
-  
+            -->
+
+            <mat-form-field style="width: 100%;">
+              <mat-label>Institucion</mat-label>
+              <input type="text" matInput [formControl]="this.forms.controls.institutionFormControl" [errorStateMatcher]="matcher" placeholder="Mi Institucion...">
+              <mat-error *ngIf="this.forms.controls.institutionFormControl.hasError('required')">
+                Institucion es <strong>requerido</strong>
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field style="width: 100%;">
+              <mat-label>Titulo</mat-label>
+              <input type="text" matInput [formControl]="this.forms.controls.degreeFormControl" [errorStateMatcher]="matcher" placeholder="Mi Titulo...">
+              <mat-error *ngIf="this.forms.controls.degreeFormControl.hasError('required')">
+                Titulo es <strong>requerido</strong>
+              </mat-error>
+            </mat-form-field>
+
             <mat-form-field appearance="fill">
-            <mat-label>Choose a date</mat-label>
+            <mat-label>Fecha de finalizacion</mat-label>
             <!-- #docregion toggle -->
-            <input matInput [matDatepicker]="picker" [(ngModel)]="this.d.endDate" placeholder="Choose a date">
+            <input matInput [matDatepicker]="picker" [formControl]="this.forms.controls.enddateFormControl" placeholder="00/00/0000">
             <mat-hint>DD/MM/YYYY</mat-hint>
+            <mat-error *ngIf="this.forms.get('enddateFormControl')?.hasError('required')">
+              Fecha de finalizacion es <strong>requerido</strong>
+            </mat-error>
             <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
             <!-- #enddocregion toggle -->
             </mat-form-field>
+
+            <div class="d-flex mt-2" style="width: 50%;">
+              <!-- cambiar luego por toggleEdit -->
+              <button style="width: 50%;" class="btn btn-success me-1" (click)="editEducation(indexOfElement.id)">Editar</button>
+              <button style="width: 50%;" class="btn btn-dark" (click)="toggleEdit(indexOfElement.id)">Cancelar</button>
+            </div>
           </div>
   
         </div>
       </div>
+
+      <!-- Modal for edit education image -->
+      <div class="modal fade" [id]="'editEducationImageModal'+d.id" tabindex="-1" aria-labelledby="educationImageModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="educationImageModalLabel">Actualizar la imagen de educacion de {{d.institution}}</h1>
+              <button (click)="resetInputFile()" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              
+              <div class="input-group">
+                <input class="form-control form-control-sm" (change)="onFileSelected($event)" type="file">
+                <button class="btn btn-dark btn-sm" (click)="resetInputFile()" type="button">
+                  <div class="btn-close btn-close-white"></div>
+                </button>
+              </div>
+
+              <button *ngIf="!d.idPicture" style="width: 100%;" (click)="updateEducationImage(d.id)" class="btn btn-success btn-sm mt-3">Actualizar Imagen</button>
+              <div *ngIf="d.idPicture" class="d-flex mt-3" style="width: 100%;">
+                <button style="width: 50%;" (click)="updateEducationImage(d.id)" class="btn btn-success btn-sm me-1">Actualizar Imagen</button>
+                <button style="width: 50%;" (click)="deleteEducationImage(d.id)" class="btn btn-danger btn-sm ms-1">Eliminar Imagen</button>
+              </div>
+
+            </div>
+            <div class="modal-footer">
+              <button (click)="resetInputFile()" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
 </div>
 
-<!-- Modal for edit education image -->
-<div class="modal fade" id="editEducationImageModal" tabindex="-1" aria-labelledby="educationImageModalLabel" aria-hidden="true">
+
+
+<!-- Modal to create new education -->
+<div class="modal fade" id="createNewEducationModal" tabindex="-1" aria-labelledby="eduModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="educationImageModalLabel">Modal title</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <h1 class="modal-title fs-5" id="eduModalLabel">Agregar nueva educacion</h1>
+        <button type="button" (click)="clearInputs()" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        ...asd
+        
+        <form class="example-form">
+          <mat-form-field class="example-full-width">
+            <mat-label>Institucion</mat-label>
+            <input type="text" matInput [formControl]="this.forms.controls.institutionFormControl" [errorStateMatcher]="matcher" placeholder="Mi Institucion...">
+            <mat-error *ngIf="this.forms.controls.institutionFormControl.hasError('required')">
+              Institucion es <strong>requerido</strong>
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="example-full-width">
+            <mat-label>Titulo</mat-label>
+            <input type="text" matInput [formControl]="this.forms.controls.degreeFormControl" [errorStateMatcher]="matcher" placeholder="Mi Titulo...">
+            <mat-error *ngIf="this.forms.controls.degreeFormControl.hasError('required')">
+              Titulo es <strong>requerido</strong>
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" class="example-full-width">
+            <mat-label>Fecha de finalizacion</mat-label>
+            <!-- #docregion toggle -->
+            <input matInput [matDatepicker]="picker" [(ngModel)]="this.forms.controls.enddateFormControl" placeholder="00/00/0000">
+            <mat-hint>DD/MM/YYYY</mat-hint>
+            <mat-error *ngIf="this.forms.get('enddateFormControl')?.hasError('required')">
+              Fecha de finalizacion es <strong>requerido</strong>
+            </mat-error>
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            <!-- #enddocregion toggle -->
+            </mat-form-field>
+        </form>
+
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+        <button type="button" (click)="clearInputs()" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        <button type="button" (click)="addNewEducation()" class="btn btn-primary">Agregar</button>
       </div>
     </div>
   </div>
 </div>
-
-<!-- Modal to create new education -->

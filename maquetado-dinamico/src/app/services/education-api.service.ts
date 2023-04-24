@@ -30,6 +30,9 @@ export class EducationApiService {
     this._api.loginData$.subscribe(loginData => { 
       this.accesstoken = loginData.accessToken
       this.idLoggedUser = loginData.idUser
+      if(loginData.isLogged){
+        this.getAllUserEducation()
+      }
     })
   }
 
@@ -37,14 +40,17 @@ export class EducationApiService {
     this.allUserEducation.next(allEducation);
   }
 
-  createEducation(newEducation: Education) : Observable<any>{
+  createEducation(newEducation: Education) {
     return this._http.post(`${this.apiUrl}/api/education/create/${this.idLoggedUser}`, 
     {
       institution: newEducation.institution,
       degree: newEducation.degree,
       enddate: newEducation.enddate,
       idPicture: null
-    }, this.httpOptions);
+    }, { headers: new HttpHeaders({'Content-Type':  'application/json', Authorization: `Bearer ${this.accesstoken}`}) }).subscribe(newEducationSaved=>{
+      this.allUserEducation.value?.push(newEducationSaved as Education)
+      this.updateAllUserEducation(this.allUserEducation.value as Array<Education>)
+    });
   }
 
   getAllUserEducation() {
@@ -58,18 +64,36 @@ export class EducationApiService {
     { headers: new HttpHeaders({ Authorization: `Bearer ${this.accesstoken}` }) });
   }
 
-  updateEducation(idEducation: string, newDataEducation: Education) : Observable<any>{
+  updateEducation(idEducation: string, newDataEducation: Education){
     return this._http.post(`${this.apiUrl}/api/education/update/${idEducation}`, 
     {
       institution: newDataEducation.institution,
       degree: newDataEducation.degree,
       enddate: newDataEducation.enddate
-    }, this.httpOptions);
+    }, { headers: new HttpHeaders({'Content-Type':  'application/json', Authorization: `Bearer ${this.accesstoken}`}) }).subscribe(updatedEducation=>{
+      let e = updatedEducation as Education
+      if(this.allUserEducation.value){
+        for (let index = 0; index < this.allUserEducation.value?.length; index++) {
+          if(this.allUserEducation.value[index].id === e.id){
+            this.allUserEducation.value[index].institution = e.institution
+            this.allUserEducation.value[index].degree = e.degree
+            this.allUserEducation.value[index].enddate = e.enddate
+            break;
+          }
+        }
+      }
+      this.updateAllUserEducation(this.allUserEducation.value as Array<Education>)
+    });
   }
 
-  deleteEducation(idEducation: string) : Observable<any>{
+  deleteEducation(idEducation: string) {
     return this._http.delete(`${this.apiUrl}/api/education/delete/${idEducation}`,
-    { headers: new HttpHeaders({ Authorization: `Bearer ${this.accesstoken}` }) });
+    { headers: new HttpHeaders({ Authorization: `Bearer ${this.accesstoken}` }) }).subscribe(message =>{
+      let index = this.allUserEducation.value?.findIndex(obj => obj.id===idEducation)
+      if(index!==-1){
+        this.updateAllUserEducation(this.allUserEducation.getValue()?.filter(obj => obj.id!==idEducation) as Array<Education>)
+      }
+    });
   }
 
 }
