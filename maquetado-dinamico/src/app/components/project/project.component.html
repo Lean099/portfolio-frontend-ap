@@ -26,17 +26,7 @@
   
           <!-- EDIT -->
           <div class="card-body" *ngIf="d.edit">
-            <!--
-              <div class="d-flex justify-content-between">
-                <input type="text" class="form-control mb-2" [(ngModel)]="d.name" placeholder="Name project">
-                <div class="ms-2">
-                  <button class="btn btn-primary" (click)="toggleEdit(indexOfElement.id)">Editar</button>
-                </div>
-              </div>
-              <textarea class="form-control mb-2" [(ngModel)]="d.description" rows="1" placeholder="Project description"></textarea>
-              <input type="text" class="form-control mb-2" [(ngModel)]="d.linkGithub" placeholder="Link Github Project">
-              <input type="text" class="form-control" [(ngModel)]="d.linkProject" placeholder="Link Project">
-            -->
+           
             <mat-form-field style="width: 100%;">
               <mat-label>Nombre Proyecto</mat-label>
               <input type="text" matInput [formControl]="this.forms.controls.nameFormControl" [errorStateMatcher]="matcher" placeholder="Mi Proyecto...">

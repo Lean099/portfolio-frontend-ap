@@ -1,13 +1,11 @@
 <div class="card my-3 mx-2">
     <div class="card-body">
-      
       <div class="d-flex justify-content-between">
         <h3>Acerca de</h3>
         <button *ngIf="this.isLogged" class="btn editBtn" (click)="toggleEdit()"><i class="fa-solid fa-pen-to-square"></i></button>
       </div>
       <p class="aboutContent" *ngIf="this.edit!=true">{{ aboutContent }}</p>
       <div class="d-flex" *ngIf="this.edit">
-        <!--<textarea [(ngModel)]="aboutContent" class="form-control me-3" rows="1"></textarea>-->
         <mat-form-field style="width: 100%;">
           <mat-label>Acerca de mi</mat-label>
           <textarea matInput [formControl]="aboutFormControl" [errorStateMatcher]="matcher" 

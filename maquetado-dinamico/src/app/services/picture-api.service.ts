@@ -18,12 +18,6 @@ export class PictureApiService {
   private idLoggedUser : string = "";
   private bannerAndProfilePicture = new BehaviorSubject<Array<Picture>|null>(null);
   bannerAndProfilePicture$ = this.bannerAndProfilePicture.asObservable();
-  private httpOptions = {
-    headers: new HttpHeaders({
-      'Content-Type':  'application/json',
-      Authorization: `Bearer ${this.accesstoken}`
-    })
-  };
 
   allUserWork : Work[] = []
   allUserEducation : Education[] = []
@@ -52,9 +46,6 @@ export class PictureApiService {
     this.bannerAndProfilePicture.next(bannerAndProfilePicture);
   }
 
-  // Al parecer no hace falta configurar el content-type en el header porque el navegador lo hace por nosotros
-  // entonces solo paso el token
-  // el idEntity podra venir null o con el id, todo depende del tipo de picture
   uploadPicture(typePicture: string, file: File, idEntity: string|null){
     const formData = new FormData();
     formData.append("file", file);
@@ -65,14 +56,12 @@ export class PictureApiService {
     formData, 
     { headers: new HttpHeaders({ Authorization: `Bearer ${this.accesstoken}` }) })
     .subscribe(data => {
-      console.log(data)
       if(idEntity!=null){
         if(typePicture=='work'){
           this._work.getSingleWork(idEntity).subscribe(work =>{
             let index = this.allUserWork?.findIndex(obj => obj.id === work.id)
             if(index!=-1){
               this.allUserWork[index].idPicture = work.idPicture
-              console.log(this.allUserWork)
               this._work.updateAllUserWork(this.allUserWork)
             }
           })
@@ -83,7 +72,6 @@ export class PictureApiService {
               this.allUserEducation[index].idPicture = education.idPicture
               this._education.updateAllUserEducation(this.allUserEducation)
             }
-            
           })
         }
       }else{
@@ -138,7 +126,6 @@ export class PictureApiService {
         this._user.getUser()
       }
     })
-    //return this._http.delete(`${this.apiUrl}/api/picture/delete`, {});
   }
 
 }

@@ -15,11 +15,6 @@ export class WorkApiService {
   private idLoggedUser : string = "";
   private allUserWork = new BehaviorSubject<Array<Work>|null>(null)
   allUserWork$ = this.allUserWork.asObservable()
-  private bearerToken : string = `Bearer ${this.accesstoken}`
-  private httpOptions = {
-    headers: new HttpHeaders()
-        .set('Content-Type',  'application/json')
-  };
 
   constructor(
     private _http : HttpClient,
@@ -89,20 +84,11 @@ export class WorkApiService {
   }
 
   deleteWork(idWork: string) {
-    console.log(idWork)
-    console.log(this.httpOptions)
-    console.log(this.accesstoken)
     return this._http.delete(`${this.apiUrl}/api/work/delete/${idWork}`, 
     { headers: new HttpHeaders({ Authorization: `Bearer ${this.accesstoken}` }) }).subscribe(message=>{
-      console.log(message)
       let index = this.allUserWork.value?.findIndex(obj => obj.id === idWork)
-      console.log("Index:", index)
       if(index !== -1){
-        console.log("Entro al if")
-        //this.allUserWork.getValue()?.slice(index, 1)
-        console.log("Antes del update:", this.allUserWork)
         this.updateAllUserWork(this.allUserWork.getValue()?.filter(obj => obj.id !== idWork) as Work[])
-        console.log("Despues del update:", this.allUserWork)
       }
     });
   }

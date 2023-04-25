@@ -15,12 +15,6 @@ export class EducationApiService {
   private idLoggedUser : string = "";
   private allUserEducation = new BehaviorSubject<Array<Education>|null>(null)
   allUserEducation$ = this.allUserEducation.asObservable()
-  private httpOptions = {
-    headers: new HttpHeaders({
-      'Content-Type':  'application/json',
-      Authorization: `Bearer ${this.accesstoken}`
-    })
-  };
 
   constructor(
     private _http : HttpClient,

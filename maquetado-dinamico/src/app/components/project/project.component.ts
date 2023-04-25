@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MyErrorStateMatcher } from 'src/app/others/configs';
 import { Project } from 'src/app/others/interfaces';
@@ -12,14 +12,6 @@ import { UserApiService } from 'src/app/services/user-api.service';
   styleUrls: ['./project.component.css']
 })
 export class ProjectComponent {
-
-  // Los links tienen que tener el https:// sino en la tag <a> no funcionan, simplemente pongamos las url completas y no lo compliquemos tanto
-  data : Array<any> = [
-    { id: "a", idUser: "1", name: "Proyecto 1", description: "This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.", linkGithub: "http://www.google.com", linkProject: "http://www.google.com", edit: false },
-    { id: "b", idUser: "1", name: "Proyecto 2", description: "This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.", linkGithub: "http://www.google.com", linkProject: "http://www.google.com", edit: false },
-    { id: "c", idUser: "1", name: "Proyecto 1", description: "This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.", linkGithub: "http://www.google.com", linkProject: "http://www.google.com", edit: false }
-    //{ id: 2, nameProject: "Proyecto 2", description: "This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.", edit: false }
-  ]
 
   isLogged : boolean = false;
   userProject : Array<any> = []

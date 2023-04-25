@@ -15,12 +15,6 @@ export class SkillApiService {
   private idLoggedUser : string = "";
   private allUserSkill = new BehaviorSubject<Array<Skill>|null>(null);
   allUserSkill$ = this.allUserSkill.asObservable();
-  private httpOptions = {
-    headers: new HttpHeaders({
-      'Content-Type':  'application/json',
-      Authorization: `Bearer ${this.accesstoken}`
-    })
-  };
 
   constructor(
     private _http : HttpClient,

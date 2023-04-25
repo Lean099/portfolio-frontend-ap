@@ -57,7 +57,6 @@ export class AboutComponent implements OnInit{
       dob: null,
       phone: null,
       about: this.aboutFormControl.dirty ? this.aboutFormControl.getRawValue() : null,
-      //about: this.aboutContent as string,
       githubUrl: null,
       linkedinUrl: null
     }

@@ -3,22 +3,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ApiService } from './api.service';
 import { environment } from '../environments/environment'
-import { DefaultUser, User } from '../others/interfaces';
-
-interface UserPersonalInfo{
-      firstname: string|null,
-      lastname: string|null,
-      dob: string|Date|null,
-      phone: string|null,
-      about: string|null,
-      githubUrl: string|null,
-      linkedinUrl: string|null
-}
-
-interface Credentials{
-  email: string|null
-  password: string|null
-}
+import { Credentials, DefaultUser, User, UserPersonalInfo } from '../others/interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -33,13 +18,7 @@ export class UserApiService {
   defaultDataUser$ = this.defaultDataUser.asObservable();
   private user = new BehaviorSubject<User|null>(null);
   user$ = this.user.asObservable();
-  private httpOptions = {
-    headers: new HttpHeaders({
-      'Content-Type':  'application/json',
-      Authorization: `Bearer ${this.accesstoken}`
-    })
-  };
-
+  
   constructor(
     private _http : HttpClient,
     private _api : ApiService
@@ -65,7 +44,6 @@ export class UserApiService {
   getDefaultUserData(){
     this._http.get(`${this.apiUrl}/api/user/defaultUser/${this.defaultUserId}`)
     .subscribe(defaultUser => this.updateDefaultDataUser(defaultUser as DefaultUser))
-    console.log(this.defaultDataUser.getValue())
   }
 
   createUser(email: string, password: string) : Observable<any>{
@@ -84,7 +62,6 @@ export class UserApiService {
   }
 
   getUser(){
-    console.log("Dentro del getUser:", this.idLoggedUser, this.accesstoken)
     return this._http.get(`${this.apiUrl}/api/user/${this.idLoggedUser}`,
     { headers: new HttpHeaders({ Authorization: `Bearer ${this.accesstoken}` }) }).subscribe(user => this.updateUser(user));
   }
@@ -104,7 +81,6 @@ export class UserApiService {
       'Content-Type':  'application/json',
       Authorization: `Bearer ${this.accesstoken}`
     }) }).subscribe(updatedUser => this.updateUser(updatedUser));
-    // Una vez actualize el usuario asi sea un pequeño dato el componente al estar subscripto recibira automaticamente la actualizacion
   }
 
   updateEmailAndPassword(credentials: Credentials){
@@ -118,5 +94,5 @@ export class UserApiService {
       Authorization: `Bearer ${this.accesstoken}`
     }) }).subscribe(updatedUser => this.updateUser(updatedUser));
   }
-    // Una vez actualize el usuario asi sea un pequeño dato el componente al estar subscripto recibira automaticamente la actualizacion
+  
 }

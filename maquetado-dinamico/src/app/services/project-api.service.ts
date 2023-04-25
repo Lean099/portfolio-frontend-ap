@@ -15,12 +15,6 @@ export class ProjectApiService {
   private idLoggedUser : string = "";
   private allUserProject = new BehaviorSubject<Array<Project>|null>(null);
   allUserProject$ = this.allUserProject.asObservable()
-  private httpOptions = {
-    headers: new HttpHeaders({
-      'Content-Type':  'application/json',
-      Authorization: `Bearer ${this.accesstoken}`
-    })
-  };
 
   constructor(
     private _http : HttpClient,

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MyErrorStateMatcher } from 'src/app/others/configs';
 import { Skill } from 'src/app/others/interfaces';
@@ -6,28 +6,12 @@ import { ApiService } from 'src/app/services/api.service';
 import { SkillApiService } from 'src/app/services/skill-api.service';
 import { UserApiService } from 'src/app/services/user-api.service';
 
-interface Data{
-  id: string|null
-  idUser: string|null
-  skillName: string
-  percentage: any
-  edit: boolean
-}
-
 @Component({
   selector: 'app-skills',
   templateUrl: './skills.component.html',
   styleUrls: ['./skills.component.css']
 })
 export class SkillsComponent {
-
-  data : Array<Data> = [
-    { id: "a", idUser: "1", skillName: "Java", percentage: 70, edit: false },
-    { id: "b", idUser: "1", skillName: "Golang", percentage: 40, edit: false },
-    { id: "c", idUser: "1", skillName: "Typescript", percentage: 90, edit: false }
-    //{ id: "", value: 40, skillName: "Golang", edit: false },
-    //{ id: 3, value: 90, skillName: "JavaScript", edit: false }
-  ]
 
   isLogged : boolean = false;
   userSkill : Array<any> = [];
@@ -79,7 +63,7 @@ export class SkillsComponent {
     this.forms.reset()
   }
 
-  formatLabel(value: number): any {  // Cuando mueve el slider por cada "step" ejecuta la funcion retornando el valor al display
+  formatLabel(value: number): any {
     return `${value}`;
   }
 

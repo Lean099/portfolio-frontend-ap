@@ -10,10 +10,7 @@
           <div class="d-flex">
             <div *ngIf="d.edit">
               <div class="d-flex justify-content-between mb-2" >
-                <!--
-                <div><input type="text" [(ngModel)]="d.skillName" class="form-control form-control-sm"></div>
-                <button class="btn btn-primary btn-sm ms-2" (click)="toggleEdit(indexOfElement.id)">Edit</button>
-                -->
+                
                 <mat-form-field class="example-full-width" style="width: 300px">
                   <mat-label>Nombre Habilidad</mat-label>
                   <input type="text" matInput [formControl]="this.forms.controls.nameSkillFormControl" placeholder="Nombre">
@@ -39,10 +36,7 @@
           <mat-slider *ngIf="d.edit" min="0" max="100" step="1" showTickMarks discrete [displayWith]="formatLabel" style="width: 73%;">
             <input matSliderThumb [formControl]="this.forms.controls.percentageFormControl">
           </mat-slider>
-          <!--<ng-template #tolTemplate>{{ d.percentage }}</ng-template>
-          <div class="range w-75 mw-100" *ngIf="d.edit">
-            <input type="range" class="form-range customRange" [min]="this.min" [max]="this.max" [(ngModel)]="d.percentage" [tooltip]="tolTemplate" id="customRange" />
-          </div>-->
+          
           <div class="progress w-75 mw-100 mb-3" *ngIf="d.edit!=true">
             <div class="progress-bar progress-bar-striped bg-dark" role="progressbar" aria-label="Basic example" [style.width]="d.percentage+'%'" aria-valuenow="d.percentage" aria-valuemin="0" aria-valuemax="100">{{ d.percentage }}%</div>
           </div>

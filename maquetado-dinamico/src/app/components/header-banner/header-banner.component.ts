@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { User } from 'src/app/others/interfaces';
 import { AddressApiService } from 'src/app/services/address-api.service';
@@ -6,16 +6,15 @@ import { ApiService } from 'src/app/services/api.service';
 import { PictureApiService } from 'src/app/services/picture-api.service';
 import { UserApiService } from 'src/app/services/user-api.service';
 
-
 @Component({
   selector: 'app-header-banner',
   templateUrl: './header-banner.component.html',
   styleUrls: ['./header-banner.component.css']
 })
-export class HeaderBannerComponent implements OnInit{
+export class HeaderBannerComponent {
 
-  defaultBannerImage = "https://jdih.palembang.go.id/assets/img/no-image.png"
-  defaultProfileImage = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+  defaultBannerImage = "https://res.cloudinary.com/lean99/image/upload/v1681894210/Ap/no-image-banner_hhzvtu.png"
+  defaultProfileImage = "https://res.cloudinary.com/lean99/image/upload/v1681894210/Ap/no-image-profile_djkgad.png"
   isLogged : boolean = false;
   editBanner : boolean = false
   editProfile : boolean = false
@@ -28,9 +27,6 @@ export class HeaderBannerComponent implements OnInit{
     lastnameFormControl: new FormControl(''),
     phoneFormControl: new FormControl(''),
     dobFormControl: new FormControl(new Date()),
-    //countryFormControl: new FormControl(''),
-    //provinceFormControl: new FormControl(''),
-    //cityFormControl: new FormControl(''),
     githubFormControl: new FormControl(''),
     linkedinFormControl: new FormControl('')
   })
@@ -56,12 +52,9 @@ export class HeaderBannerComponent implements OnInit{
     })
     this._user.user$.subscribe(user => {
       this.user = user
-      console.log(this.user)
     })
   }
   
-  ngOnInit(){}
-
   toggleEdit() : void {
     this.editInfo = !this.editInfo
     if(this.editInfo){
@@ -115,7 +108,6 @@ export class HeaderBannerComponent implements OnInit{
       linkedinUrl: this.forms.controls.linkedinFormControl.enabled&&this.forms.controls.linkedinFormControl.dirty ? this.forms.controls.linkedinFormControl.getRawValue() : null,
       about: null
     }
-    console.log(newInfo)
     this._user.updatePersonalInformation(newInfo);
   }
 
@@ -127,7 +119,6 @@ export class HeaderBannerComponent implements OnInit{
       city: this.formsAddress.controls.cityFormControl.enabled&&this.formsAddress.controls.cityFormControl.dirty ? { id: null, name: this.formsAddress.controls.cityFormControl.getRawValue() } : null,
       province: this.formsAddress.controls.provinceFormControl.enabled&&this.formsAddress.controls.provinceFormControl.dirty ? { id: null, name: this.formsAddress.controls.provinceFormControl.getRawValue() } : null
     }
-    console.log(newAddress)
     this._address.updateAddress(newAddress);
   }
 

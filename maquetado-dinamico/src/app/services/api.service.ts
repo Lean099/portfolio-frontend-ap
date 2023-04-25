@@ -2,15 +2,9 @@ import { HttpClient, HttpHeaders, HttpParams, HttpErrorResponse } from '@angular
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject, Observable, onErrorResumeNext, catchError, throwError } from 'rxjs';
 import { environment } from '../environments/environment'
-import { LoginResponse, User } from '../others/interfaces'
+import { LoginData, LoginResponse } from '../others/interfaces'
 
 // npm run ng serve -- --host=0.0.0.0 --disable-host-check
-
-interface LoginData {
-  accessToken : string
-  idUser : string
-  isLogged : boolean
-}
 
 @Injectable({
   providedIn: 'root'
@@ -31,7 +25,6 @@ export class ApiService {
   }
 
   login(email: string, password: string) : Observable<any> {
-    console.log(email, password)
     const httpOptions = {
       headers: new HttpHeaders({
         "Content-Type": "application/x-www-form-urlencoded",
@@ -40,12 +33,6 @@ export class ApiService {
     const body = new HttpParams()
     .set('username', email)
     .set('password', password);
-    /*this._http.post<LoginResponse>(`${this.apiURL}/login`,
-                                   body.toString(),
-                                   httpOptions)
-                                   .subscribe(response => { 
-                                      this.updateLoginData({ accessToken: response.access_token, idUser: response.id_user, isLogged: true})
-                                   })*/
     return this._http.post<LoginResponse>(`${this.apiURL}/login`,
                                    body.toString(),
                                    httpOptions).pipe(
@@ -59,22 +46,10 @@ export class ApiService {
                                       }
                                     })
                                    )
-                                   /*.subscribe({
-                                    next: (response)=> this.updateLoginData({ accessToken: response.access_token, idUser: response.id_user, isLogged: true}),
-                                    error: (e)=> { console.log(e); this.error=e }
-                                   })*/        
-      console.log(this.loginData.getValue())
-      /*console.log(this.error)
-      if(this.error){
-        return this.error
-      }*/
   }
 
   logout(){
-    console.log("Justo antes de logout:", this.loginData.getValue())
     this.updateLoginData({accessToken: "", idUser: "", isLogged: false})
-    console.log("Despues de logout:", this.loginData.getValue())
   }
-
 
 }

@@ -3,6 +3,27 @@ export interface LoginResponse {
     id_user : string
 }
 
+export interface LoginData {
+    accessToken : string
+    idUser : string
+    isLogged : boolean
+}
+
+export interface UserPersonalInfo{
+    firstname: string|null,
+    lastname: string|null,
+    dob: string|Date|null,
+    phone: string|null,
+    about: string|null,
+    githubUrl: string|null,
+    linkedinUrl: string|null
+}
+
+export interface Credentials{
+email: string|null
+password: string|null
+}
+
 export interface DefaultUser {
     userData: User
     work: Array<Work|null>

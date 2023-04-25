@@ -1,15 +1,13 @@
 <div class="experiencia">
     <div class="d-flex justify-content-between">
       <h3>Experiencia</h3>
-      <!-- data-bs-toggle="modal" data-bs-target="#createNewExperienceModal" -->
       <button *ngIf="this.isLogged" class="btn editBtn" data-bs-toggle="modal" data-bs-target="#createNewExperienceModal"><i class="fa-solid fa-plus"></i></button>
     </div>
-    <!--  -->
+  
     <div class="card border-light mb-3" *ngFor="let d of userWork; let indexOfElement=$implicit">
       <div class="row g-0">
         <div class="col-md-1">
 
-          <!-- No olvidar de cambiar los signos en los tres isLogged cuando use la API -->
           <img *ngIf="!isLogged && !d.idPicture" src="{{image}}" class="img-fluid rounded-start mt-2" style="max-width: 110px;" alt="imagen-experiencia">
           <img *ngIf="!isLogged && d.idPicture" src="{{d.idPicture?.url}}" class="img-fluid rounded-start mt-2" style="max-width: 110px;" alt="imagen-experiencia">
           <div *ngIf="isLogged" class="containerElementPicture position-absolute mt-2">
@@ -29,32 +27,18 @@
             <div class="d-flex justify-content-between">
               <h5 class="card-title">{{ d.company }}</h5>
               <div>
-                <!-- cambiar luego a toggleEdit -->
                 <button *ngIf="this.isLogged" class="btn editBtn" (click)="toggleEdit(indexOfElement.id)"><i class="fa-solid fa-pen-to-square"></i></button>
                 <button *ngIf="this.isLogged" class="btn editBtn ms-1" (click)="deleteWork(indexOfElement.id)"><i class="fa-solid fa-trash"></i></button>
               </div>
             </div>
             <p class="card-text" >{{ d.job }}</p>
-            <!-- *ngIf="!this.d.range.value.start" // *ngIf="this.d.range.value.start" -->
-            <!--<div *ngIf="d.range;else other_content">
-              <p *ngIf="!this.d.range.value.start" class="card-text"><small class="text-muted">--/--/--</small></p>
-              <p *ngIf="this.d.range.value.start" class="card-text"><small class="text-muted">{{ d.range.value.start | date : 'dd/MM/yyyy' }} - {{ d.range.value.end | date : 'dd/MM/yyyy' }}</small></p>
-            </div>
-            <ng-template #other_content>
-              <p *ngIf="!this.d.startdate" class="card-text"><small class="text-muted">--/--/--</small></p>
-              <p *ngIf="this.d.startdate" class="card-text"><small class="text-muted">{{ d.startdate | date : 'dd/MM/yyyy' }} - {{ d.enddate | date : 'dd/MM/yyyy' }}</small></p>
-            </ng-template>-->
             <p *ngIf="!this.d.startdate" class="card-text"><small class="text-muted">--/--/--</small></p>
             <p *ngIf="this.d.startdate" class="card-text"><small class="text-muted">{{ d.startdate | date : 'dd/MM/yyyy' }} - {{ d.enddate | date : 'dd/MM/yyyy' }}</small></p>
           </div>
   
           <!-- EDIT -->
           <div class="card-body" *ngIf="this.d.edit">
-            <!--
-            <input [(ngModel)]="d.company" class="form-control mb-2" type="text">
-            <input [(ngModel)]="d.job" class="form-control mb-3" type="text">
-            -->
-
+            
             <mat-form-field style="width: 100%;">
               <mat-label>Empresa</mat-label>
               <input type="text" matInput [formControl]="this.companyFormControl" [errorStateMatcher]="matcher" placeholder="Mi Empresa...">
@@ -90,7 +74,6 @@
             </mat-form-field>
 
               <div class="d-flex mt-2" style="width: 50%;">
-                <!-- cambiar luego por toggleEdit -->
                 <button style="width: 50%;" class="btn btn-success me-1" (click)="editWork(indexOfElement.id)">Editar</button>
                 <button style="width: 50%;" class="btn btn-dark" (click)="toggleEdit(indexOfElement.id)">Cancelar</button>
               </div>

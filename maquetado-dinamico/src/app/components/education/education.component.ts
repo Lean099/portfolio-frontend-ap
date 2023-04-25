@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import * as moment from 'moment';
 import { MyErrorStateMatcher } from 'src/app/others/configs';
@@ -8,17 +8,6 @@ import { EducationApiService } from 'src/app/services/education-api.service';
 import { PictureApiService } from 'src/app/services/picture-api.service';
 import { UserApiService } from 'src/app/services/user-api.service';
 
-interface Data{
-  id: string|null
-  idUser: string|null
-  institution: string|null
-  degree: string|null
-  //startDate: Date|null
-  endDate: any
-  idPicture: string|null|any
-  edit: boolean
-}
-
 @Component({
   selector: 'app-education',
   templateUrl: './education.component.html',
@@ -26,14 +15,7 @@ interface Data{
 })
 export class EducationComponent {
 
-  image : any = "https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg?20200913095930"
-  data : Array<Data> = [
-    { id: "a", idUser: "1", institution: "Universidad", degree: "Titulo...", endDate: null, idPicture: null, edit: false },
-    { id: "b", idUser: "1", institution: "Universidad", degree: "Titulo...", endDate: null, idPicture: null, edit: false },
-    { id: "c", idUser: "1", institution: "Universidad", degree: "Titulo...", endDate: null, idPicture: null, edit: false }
-    //{ id: 2, college: "Universidad", degree: "Titulo...", edit: false },
-    //{ id: 3, college: "Universidad", degree: "Titulo...", edit: false },
-  ]
+  image : any = "https://res.cloudinary.com/lean99/image/upload/v1680901576/Ap/No_Image_Available_ivbumq.jpg"
 
   isLogged : boolean = false;
   userEducation : Array<any> = [];

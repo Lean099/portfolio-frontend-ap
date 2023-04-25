@@ -3,13 +3,11 @@
       <h3>Educacion</h3>
       <button *ngIf="this.isLogged" class="btn editBtn" data-bs-toggle="modal" data-bs-target="#createNewEducationModal"><i class="fa-solid fa-plus"></i></button>
     </div>
-    <!---->
   
     <div class="card border-light mb-3" *ngFor="let d of userEducation; let indexOfElement=$implicit">
       <div class="row g-0">
         <div class="col-md-1">
 
-          
           <img *ngIf="!isLogged && !d.idPicture" src="{{image}}" class="img-fluid rounded-start mt-2" style="max-width: 110px;" alt="imagen-educacion">
           <img *ngIf="!isLogged && d.idPicture" src="{{d.idPicture?.url}}" class="img-fluid rounded-start mt-2" style="max-width: 110px;" alt="imagen-educacion">
           <div *ngIf="isLogged" class="containerElementPicture position-absolute mt-2">
@@ -39,12 +37,7 @@
   
           <!-- EDIT -->
           <div class="card-body" *ngIf="this.d.edit">
-            <!--
-            <input [(ngModel)]="d.institution" class="form-control me-3" type="text">
-            <button class="btn btn-primary" (click)="toggleEdit(indexOfElement.id)">Edit</button>
-            <input [(ngModel)]="d.degree" class="form-control mb-3" type="text">
-            -->
-
+            
             <mat-form-field style="width: 100%;">
               <mat-label>Institucion</mat-label>
               <input type="text" matInput [formControl]="this.forms.controls.institutionFormControl" [errorStateMatcher]="matcher" placeholder="Mi Institucion...">
@@ -63,7 +56,6 @@
 
             <mat-form-field appearance="fill">
             <mat-label>Fecha de finalizacion</mat-label>
-            <!-- #docregion toggle -->
             <input matInput [matDatepicker]="picker" [formControl]="this.forms.controls.enddateFormControl" placeholder="00/00/0000">
             <mat-hint>DD/MM/YYYY</mat-hint>
             <mat-error *ngIf="this.forms.get('enddateFormControl')?.hasError('required')">
@@ -71,11 +63,9 @@
             </mat-error>
             <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
-            <!-- #enddocregion toggle -->
             </mat-form-field>
 
             <div class="d-flex mt-2" style="width: 50%;">
-              <!-- cambiar luego por toggleEdit -->
               <button style="width: 50%;" class="btn btn-success me-1" (click)="editEducation(indexOfElement.id)">Editar</button>
               <button style="width: 50%;" class="btn btn-dark" (click)="toggleEdit(indexOfElement.id)">Cancelar</button>
             </div>
@@ -84,7 +74,7 @@
         </div>
       </div>
 
-      <!-- Modal for edit education image -->
+      <!-- Modal to edit education image -->
       <div class="modal fade" [id]="'editEducationImageModal'+d.id" tabindex="-1" aria-labelledby="educationImageModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
@@ -149,7 +139,6 @@
 
           <mat-form-field appearance="fill" class="example-full-width">
             <mat-label>Fecha de finalizacion</mat-label>
-            <!-- #docregion toggle -->
             <input matInput [matDatepicker]="picker" [(ngModel)]="this.forms.controls.enddateFormControl" placeholder="00/00/0000">
             <mat-hint>DD/MM/YYYY</mat-hint>
             <mat-error *ngIf="this.forms.get('enddateFormControl')?.hasError('required')">
@@ -157,7 +146,6 @@
             </mat-error>
             <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
-            <!-- #enddocregion toggle -->
             </mat-form-field>
         </form>
 
