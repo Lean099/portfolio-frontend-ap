@@ -136,7 +136,14 @@ export class HeaderBannerComponent {
     this.inputFile = event.target.files[0];
   }
 
-  resetInputFile(){
+  resetInputFile(type: string){
+    if(type=="inputFileBanner"){
+      const fileInput = document.getElementById(type) as HTMLInputElement;
+      fileInput.value = '';
+    }else{
+      const fileInput = document.getElementById(type) as HTMLInputElement;
+      fileInput.value = '';
+    }
     this.inputFile = null
   }
 

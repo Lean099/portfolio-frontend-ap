@@ -50,6 +50,7 @@ export class EducationComponent {
           studies[index].edit = false;
         }
         this.userEducation = studies
+        this.clearInputs()
       }
       return;
     })
@@ -106,6 +107,8 @@ export class EducationComponent {
   }
 
   resetInputFile(){
+    const fileInput = document.getElementById('fileInputEducation') as HTMLInputElement;
+    fileInput.value = '';
     this.inputFile = null
   }
 

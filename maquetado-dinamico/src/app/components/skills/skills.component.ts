@@ -42,6 +42,7 @@ export class SkillsComponent {
           skills[index].edit = false;
         }
         this.userSkill = skills;
+        this.clearInputs()
       }
       return;
     })

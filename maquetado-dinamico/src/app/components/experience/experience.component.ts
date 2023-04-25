@@ -51,6 +51,7 @@ export class ExperienceComponent {
           works[index].edit = false;
         }
         this.userWork = works
+        this.clearInputs()
       }
       return;
     })
@@ -112,6 +113,8 @@ export class ExperienceComponent {
   }
 
   resetInputFile(){
+    const fileInput = document.getElementById('fileInputExperience') as HTMLInputElement;
+    fileInput.value = '';
     this.inputFile = null
   }
 

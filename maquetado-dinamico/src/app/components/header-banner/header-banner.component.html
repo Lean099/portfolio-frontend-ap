@@ -174,12 +174,12 @@
         <div class="modal-content" *ngIf="this.editBanner">
           <div class="modal-header">
             <h1 class="modal-title fs-5" id="modalUpdateImagesLabel">Actualizar Banner</h1>
-            <button type="button" class="btn-close" (click)="resetInputFile()" data-bs-dismiss="modal" aria-label="Close"></button>
+            <button type="button" class="btn-close" (click)="resetInputFile('inputFileBanner')" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
             <div class="input-group">
-              <input class="form-control form-control-sm" (change)="onFileSelected($event)" id="formFileSm" type="file">
-              <button class="btn btn-dark btn-sm" (click)="resetInputFile()" type="button" id="formFileSm">
+              <input class="form-control form-control-sm" (change)="onFileSelected($event)" id="inputFileBanner" type="file">
+              <button class="btn btn-dark btn-sm" (click)="resetInputFile('inputFileBanner')" type="button">
                 <div class="btn-close btn-close-white"></div>
               </button>
             </div>
@@ -191,7 +191,7 @@
 
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" (click)="resetInputFile()" data-bs-dismiss="modal">Cerrar</button>
+            <button type="button" class="btn btn-secondary" (click)="resetInputFile('inputFileBanner')" data-bs-dismiss="modal">Cerrar</button>
           </div>
         </div>
     
@@ -199,12 +199,12 @@
         <div class="modal-content" *ngIf="this.editProfile">
           <div class="modal-header">
             <h1 class="modal-title fs-5" id="modalUpdateImagesLabel">Actualizar Imagen de Perfil</h1>
-            <button type="button" class="btn-close" (click)="resetInputFile()" data-bs-dismiss="modal" aria-label="Close"></button>
+            <button type="button" class="btn-close" (click)="resetInputFile('inputFileProfile')" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
             <div class="input-group">
-              <input class="form-control form-control-sm" (change)="onFileSelected($event)" id="formFileSm" type="file">
-              <button class="btn btn-dark btn-sm" (click)="resetInputFile()" type="button" id="formFileSm">
+              <input class="form-control form-control-sm" (change)="onFileSelected($event)" id="inputFileProfile" type="file">
+              <button class="btn btn-dark btn-sm" (click)="resetInputFile('inputFileProfile')" type="button">
                 <div class="btn-close btn-close-white"></div>
               </button>
             </div>
@@ -216,7 +216,7 @@
             
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" (click)="resetInputFile()" data-bs-dismiss="modal">Cerrar</button>
+            <button type="button" class="btn btn-secondary" (click)="resetInputFile('inputFileProfile')" data-bs-dismiss="modal">Cerrar</button>
           </div>
         </div>
         

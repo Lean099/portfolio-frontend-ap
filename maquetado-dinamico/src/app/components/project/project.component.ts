@@ -44,6 +44,7 @@ export class ProjectComponent {
           projects[index].edit = false
         }
         this.userProject = projects
+        this.clearInputs()
       }
       return;
     })
