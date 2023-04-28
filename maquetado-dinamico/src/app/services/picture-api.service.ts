@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { BehaviorSubject, Observable, catchError, throwError } from 'rxjs';
 import { environment } from '../environments/environment';
 import { ApiService } from './api.service';
 import { Education, Picture, Work } from '../others/interfaces';
@@ -54,8 +54,19 @@ export class PictureApiService {
     }
     return this._http.post(`${this.apiUrl}/api/picture/upload/${this.idLoggedUser}/${typePicture}`,
     formData, 
-    { headers: new HttpHeaders({ Authorization: `Bearer ${this.accesstoken}` }) })
-    .subscribe(data => {
+    { headers: new HttpHeaders({ Authorization: `Bearer ${this.accesstoken}` }) }).pipe(
+      catchError((error: HttpErrorResponse)=>{
+        if (error.status < 400) {
+          return throwError(()=> new Error('Ocurrio un error al subir la imagen'));
+        } else if (error.status >= 400 && error.status < 500) {
+          return throwError(()=> new Error('Ocurrió un error en la solicitud: ' + error.error.message));
+        } else {
+          return throwError(()=> new Error('Ocurrió un error en el servidor: ' + error.message));
+        }
+      })
+     )
+    
+    /*.subscribe(data => {
       if(idEntity!=null){
         if(typePicture=='work'){
           this._work.getSingleWork(idEntity).subscribe(work =>{
@@ -77,7 +88,7 @@ export class PictureApiService {
       }else{
         this._user.getUser()
       }
-    })
+    })*/
   }
 
   getPicture(idPicture: string) : Observable<any>{
@@ -91,7 +102,7 @@ export class PictureApiService {
     .subscribe(bannerAndProfilePicture => this.updateBannerAndProfilePicture(bannerAndProfilePicture as Array<Picture>));
   }
 
-  deletePicture(typePicture: string, idEntity: string|null){
+  deletePicture(typePicture: string, idEntity: string|null) : Observable<any>{
     const options = {
       body: {
         idUser: this.idLoggedUser,
@@ -103,7 +114,18 @@ export class PictureApiService {
         Authorization: `Bearer ${this.accesstoken}`
       })
     }
-    this._http.request('delete', `${this.apiUrl}/api/picture/delete`, options).subscribe(res =>{
+    return this._http.request('delete', `${this.apiUrl}/api/picture/delete`, options).pipe(
+      catchError((error: HttpErrorResponse)=>{
+        if (error.status < 400) {
+          return throwError(()=> new Error('Ocurrio un error al borrar la imagen'));
+        } else if (error.status >= 400 && error.status < 500) {
+          return throwError(()=> new Error('Ocurrió un error en la solicitud: ' + error.error.message));
+        } else {
+          return throwError(()=> new Error('Ocurrió un error en el servidor: ' + error.message));
+        }
+      })
+     )
+    /*.subscribe(res =>{
       if(idEntity!=null){
         if(typePicture=='work'){
           this._work.getSingleWork(idEntity).subscribe(work =>{
@@ -125,7 +147,7 @@ export class PictureApiService {
       }else{
         this._user.getUser()
       }
-    })
+    })*/
   }
 
 }

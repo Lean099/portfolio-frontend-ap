@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { BehaviorSubject, Observable, catchError, throwError } from 'rxjs';
 import { ApiService } from './api.service';
 import { environment } from '../environments/environment';
 import { Education } from '../others/interfaces';
@@ -41,10 +41,18 @@ export class EducationApiService {
       degree: newEducation.degree,
       enddate: newEducation.enddate,
       idPicture: null
-    }, { headers: new HttpHeaders({'Content-Type':  'application/json', Authorization: `Bearer ${this.accesstoken}`}) }).subscribe(newEducationSaved=>{
-      this.allUserEducation.value?.push(newEducationSaved as Education)
-      this.updateAllUserEducation(this.allUserEducation.value as Array<Education>)
-    });
+    }, { headers: new HttpHeaders({'Content-Type':  'application/json', Authorization: `Bearer ${this.accesstoken}`}) }).pipe(
+      catchError((error: HttpErrorResponse)=>{
+        if (error.status < 400) {
+          return throwError(()=> new Error('No se pudo crear nueva educacion'));
+        } else if (error.status >= 400 && error.status < 500) {
+          return throwError(()=> new Error('Ocurrió un error en la solicitud: ' + error.error.message));
+        } else {
+          return throwError(()=> new Error('Ocurrió un error en el servidor: ' + error.message));
+        }
+      })
+     )
+    
   }
 
   getAllUserEducation() {
@@ -64,30 +72,34 @@ export class EducationApiService {
       institution: newDataEducation.institution,
       degree: newDataEducation.degree,
       enddate: newDataEducation.enddate
-    }, { headers: new HttpHeaders({'Content-Type':  'application/json', Authorization: `Bearer ${this.accesstoken}`}) }).subscribe(updatedEducation=>{
-      let e = updatedEducation as Education
-      if(this.allUserEducation.value){
-        for (let index = 0; index < this.allUserEducation.value?.length; index++) {
-          if(this.allUserEducation.value[index].id === e.id){
-            this.allUserEducation.value[index].institution = e.institution
-            this.allUserEducation.value[index].degree = e.degree
-            this.allUserEducation.value[index].enddate = e.enddate
-            break;
-          }
+    }, { headers: new HttpHeaders({'Content-Type':  'application/json', Authorization: `Bearer ${this.accesstoken}`}) }).pipe(
+      catchError((error: HttpErrorResponse)=>{
+        if (error.status < 400) {
+          return throwError(()=> new Error('No se pudo editar la educacion'));
+        } else if (error.status >= 400 && error.status < 500) {
+          return throwError(()=> new Error('Ocurrió un error en la solicitud: ' + error.error.message));
+        } else {
+          return throwError(()=> new Error('Ocurrió un error en el servidor: ' + error.message));
         }
-      }
-      this.updateAllUserEducation(this.allUserEducation.value as Array<Education>)
-    });
+      })
+     )
+    
   }
 
   deleteEducation(idEducation: string) {
     return this._http.delete(`${this.apiUrl}/api/education/delete/${idEducation}`,
-    { headers: new HttpHeaders({ Authorization: `Bearer ${this.accesstoken}` }) }).subscribe(message =>{
-      let index = this.allUserEducation.value?.findIndex(obj => obj.id===idEducation)
-      if(index!==-1){
-        this.updateAllUserEducation(this.allUserEducation.getValue()?.filter(obj => obj.id!==idEducation) as Array<Education>)
-      }
-    });
+    { headers: new HttpHeaders({ Authorization: `Bearer ${this.accesstoken}` }) }).pipe(
+      catchError((error: HttpErrorResponse)=>{
+        if (error.status < 400) {
+          return throwError(()=> new Error('No se pudo eliminar la educacion'));
+        } else if (error.status >= 400 && error.status < 500) {
+          return throwError(()=> new Error('Ocurrió un error en la solicitud: ' + error.error.message));
+        } else {
+          return throwError(()=> new Error('Ocurrió un error en el servidor: ' + error.message));
+        }
+      })
+     )
+    
   }
 
 }

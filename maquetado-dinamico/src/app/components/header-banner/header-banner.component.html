@@ -36,9 +36,9 @@
           <span *ngIf="this.user?.address?.province">{{this.user?.address?.province?.name}}, </span>
           <span *ngIf="this.user?.address?.city">{{this.user?.address?.city?.name}}</span>
         </p>
-        <p class="card-text">Links:
-          <a *ngIf="this.user?.linkedinUrl" class="btn editBtn" href="{{this.user?.linkedinUrl}}" target="_blank" rel="noreferrer" rel="noopener"><i class="fa-brands fa-linkedin" style="padding:0;font-size:30px;"></i></a>
-          <a *ngIf="this.user?.githubUrl" class="btn editBtn ms-2" href="{{this.user?.githubUrl}}" target="_blank" rel="noreferrer" rel="noopener"><i class="fa-brands fa-github" style="padding:0;font-size:30px;"></i></a>
+        <p class="card-text">Mis Links:
+          <a *ngIf="this.user?.linkedinUrl" class="me-2" href="{{this.user?.linkedinUrl}}" target="_blank" rel="noreferrer" rel="noopener">LinkedIn</a>
+          <a *ngIf="this.user?.githubUrl" class="" href="{{this.user?.githubUrl}}" target="_blank" rel="noreferrer" rel="noopener">GitHub</a>
         </p>
       </div>
       

@@ -5,9 +5,11 @@
         <span class="navbar-brand mb-0 h1 ms-2">#YoProgramo</span>
       </div>
       <div>
-        <button *ngIf="this.isLogged" type="button" class="btn btn-dark ms-2" data-bs-toggle="modal" data-bs-target="#userDataModal"><i class="fa-solid fa-user-gear fa-lg"></i></button>
-        <button *ngIf="!this.isLogged"  type="button" class="btn btn-dark ms-1" data-bs-toggle="modal" data-bs-target="#loginModal">Login</button>
-        <button *ngIf="this.isLogged" (click)="logout()"  type="button" class="btn btn-dark ms-1">Log Out</button>
+        <a *ngIf="this.user?.linkedinUrl" class="btn editBtn" href="{{this.user?.linkedinUrl}}" target="_blank" rel="noreferrer" rel="noopener"><i class="fa-brands fa-linkedin" style="padding:0;font-size:30px;"></i></a>
+        <a *ngIf="this.user?.githubUrl" class="btn editBtn mx-2" href="{{this.user?.githubUrl}}" target="_blank" rel="noreferrer" rel="noopener"><i class="fa-brands fa-github" style="padding:0;font-size:30px;"></i></a>
+        <button *ngIf="this.isLogged" type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#userDataModal"><i class="fa-solid fa-user-gear fa-lg"></i></button>
+        <button *ngIf="!this.isLogged"  type="button" class="btn btn-dark ms-2" data-bs-toggle="modal" data-bs-target="#loginModal">Login</button>
+        <button *ngIf="this.isLogged" (click)="logout()"  type="button" class="btn btn-dark ms-2">Log Out</button>
       </div>
     </div>
 </nav>

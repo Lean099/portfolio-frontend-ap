@@ -6,7 +6,9 @@ import { WorkApiService } from 'src/app/services/work-api.service';
 import * as moment from 'moment';
 import { ApiService } from 'src/app/services/api.service';
 import { PictureApiService } from 'src/app/services/picture-api.service';
-import { MyErrorStateMatcher } from 'src/app/others/configs';
+import { MyErrorStateMatcher, configForToastr } from 'src/app/others/configs';
+import { ToastrService } from 'ngx-toastr';
+import { environment } from 'src/app/environments/environment';
 
 @Component({
   selector: 'app-experience',
@@ -15,7 +17,7 @@ import { MyErrorStateMatcher } from 'src/app/others/configs';
 })
 export class ExperienceComponent {
 
-  image = "https://res.cloudinary.com/lean99/image/upload/v1680901576/Ap/No_Image_Available_ivbumq.jpg"
+  image = environment.defaultElementImage
   
   isLogged : boolean = false;
   userWork : Array<any> = [];
@@ -35,7 +37,8 @@ export class ExperienceComponent {
     private _user : UserApiService,
     private _work : WorkApiService,
     private _picture : PictureApiService,
-    private _api : ApiService
+    private _api : ApiService,
+    private toastr : ToastrService
   )
   {
     this._api.loginData$.subscribe(loginData => this.isLogged = loginData.isLogged)
@@ -77,6 +80,10 @@ export class ExperienceComponent {
     this.range.reset()
   }
 
+  showError(message: string){
+    this.toastr.error(message, '', configForToastr)
+  }
+
   addNewExperience(){
     let newWork : Work = {
       id: null,
@@ -87,7 +94,16 @@ export class ExperienceComponent {
       enddate: moment(this.range.get('end')?.value).toDate(),
       idPicture: null
     }
-    this._work.createWork(newWork);
+    this._work.createWork(newWork).subscribe({
+      next: (newWorkSaved)=> {
+        this.userWork?.push(newWorkSaved as Work);
+        this._work.updateAllUserWork(this.userWork as Array<Work>)
+        this.toastr.success('Se agrego nueva experiencia exitosamente!', '', configForToastr);
+      },
+      error: (err)=>{
+        this.showError(err.message)
+      }
+    })
     this.clearInputs()
   }
 
@@ -101,29 +117,88 @@ export class ExperienceComponent {
       idUser: null,
       idPicture: null
     }
-    this._work.updateWork(idWork, newDataWork)
+    this._work.updateWork(idWork, newDataWork).subscribe({
+      next: (updatedWork)=>{
+        let w = updatedWork as Work
+        if(this.userWork){
+          for (let index = 0; index < this.userWork?.length; index++) {
+            if(this.userWork[index].id === w.id){
+              this.userWork[index].company = w.company
+              this.userWork[index].job = w.job
+              this.userWork[index].startdate = w.startdate
+              this.userWork[index].enddate = w.enddate
+              break;
+            }
+          }
+        }
+        this._work.updateAllUserWork(this.userWork as Array<Work>);
+        this.toastr.success('Se edito la experiencia exitosamente!', '', configForToastr);
+      },
+      error: (err)=>{
+        this.showError(err.message)
+      }
+    });
   }
 
   deleteWork(idWork : string){
-    this._work.deleteWork(idWork)
+    this._work.deleteWork(idWork).subscribe({
+      next: (message)=>{
+        let index = this.userWork?.findIndex(obj => obj.id === idWork)
+        if(index !== -1){
+          this._work.updateAllUserWork(this.userWork?.filter(obj => obj.id !== idWork) as Work[])
+          this.toastr.warning('Se elimino la experiencia exitosamente!', '', configForToastr);
+        }
+      },
+      error: (err)=>{
+        this.showError(err.message)
+      }
+    });
   }
 
   onFileSelected(event: any): void {
     this.inputFile = event.target.files[0];
   }
 
-  resetInputFile(){
-    const fileInput = document.getElementById('fileInputExperience') as HTMLInputElement;
+  resetInputFile(inputName: string){
+    const fileInput = document.getElementById(inputName) as HTMLInputElement;
     fileInput.value = '';
     this.inputFile = null
   }
 
   updateWorkImage(idEntity: string){
-    this._picture.uploadPicture('work', this.inputFile, idEntity);
+    this._picture.uploadPicture('work', this.inputFile, idEntity).subscribe({
+      next: (res)=>{
+        this._work.getSingleWork(idEntity).subscribe(work =>{
+          let index = this.userWork?.findIndex(obj => obj.id === work.id)
+          if(index!=-1){
+            this.userWork[index].idPicture = work.idPicture
+            this._work.updateAllUserWork(this.userWork)
+            this.toastr.success('Se actualizo la imagen de experiencia exitosamente!', '', configForToastr)
+          }
+        })
+      },
+      error: (err)=>{
+        this.showError(err.message)
+      }
+    })
   }
 
   deleteWorkImage(idEntity: string){
-    this._picture.deletePicture('work', idEntity)
+    this._picture.deletePicture('work', idEntity).subscribe({
+      next: (res)=>{
+        this._work.getSingleWork(idEntity).subscribe(work =>{
+          let index = this.userWork.findIndex(obj => obj.id === work.id)
+          if(index!=-1){
+            this.userWork[index].idPicture = work.idPicture;
+            this._work.updateAllUserWork(this.userWork)
+            this.toastr.warning('Se elimino la imagen de experiencia exitosamente!', '', configForToastr);
+          }
+        })
+      },
+      error: (err)=>{
+        this.showError(err.message)
+      }
+    })
   }
 
 }

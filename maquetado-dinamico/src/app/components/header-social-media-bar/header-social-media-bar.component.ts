@@ -2,7 +2,9 @@ import { Component } from '@angular/core';
 import { ApiService } from 'src/app/services/api.service';
 import { UserApiService } from 'src/app/services/user-api.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MyErrorStateMatcher } from 'src/app/others/configs';
+import { MyErrorStateMatcher, configForToastr } from 'src/app/others/configs';
+import { ToastrService } from 'ngx-toastr';
+import { User } from 'src/app/others/interfaces';
 
 @Component({
   selector: 'app-header-social-media-bar',
@@ -12,6 +14,7 @@ import { MyErrorStateMatcher } from 'src/app/others/configs';
 export class HeaderSocialMediaBarComponent {
 
   isLogged : boolean = false;
+  user : User|null = null
   
   forms = new FormGroup({
     emailFormControl : new FormControl('', [Validators.required]),
@@ -22,9 +25,18 @@ export class HeaderSocialMediaBarComponent {
 
   constructor(
     public _api : ApiService,
-    private _user : UserApiService
+    private _user : UserApiService,
+    private toastr : ToastrService
   ){
     this._api.loginData$.subscribe(loginData => this.isLogged = loginData.isLogged)
+    this._user.defaultDataUser$.subscribe(defaultData =>{
+      if(defaultData!=null){
+        this.user = defaultData?.userData
+      }
+    })
+    this._user.user$.subscribe(user => {
+      this.user = user
+    })
   }
 
   disableFormControl(e : any){
@@ -39,17 +51,30 @@ export class HeaderSocialMediaBarComponent {
     this.forms.reset()
   }
 
+  showError(message: string){
+    this.toastr.error(message, '', configForToastr)
+  }
+
   updateEmailAndPassword(){
     let credentials = {
       email: this.forms.controls.emailFormControl.enabled&&this.forms.controls.emailFormControl.dirty ? this.forms.controls.emailFormControl.getRawValue() : null,
       password: this.forms.controls.passwordFormControl.enabled&&this.forms.controls.passwordFormControl.dirty ? this.forms.controls.passwordFormControl.getRawValue() : null
     }
-    this._user.updateEmailAndPassword(credentials)
+    this._user.updateEmailAndPassword(credentials).subscribe({
+      next: (updatedUser)=>{
+        this._user.updateUser(updatedUser)
+        this.toastr.success('Se edito credenciales del usuario exitosamente!', '', configForToastr);
+      },
+      error: (err)=>{
+        this.showError(err.message)
+      }
+    });
   }
 
   logout(){
     this._api.logout()
     this._user.getDefaultUserData();
+    this.toastr.info('Se ha cerrado la sesion', '', configForToastr)
   }
 
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { BehaviorSubject, Observable, catchError, throwError } from 'rxjs';
 import { ApiService } from './api.service';
 import { environment } from '../environments/environment';
 import { Skill } from '../others/interfaces';
@@ -39,10 +39,18 @@ export class SkillApiService {
     {
       skillName: newSkill.skillName,
       percentage: newSkill.percentage
-    }, { headers: new HttpHeaders({'Content-Type':  'application/json', Authorization: `Bearer ${this.accesstoken}`}) }).subscribe(newSkillSaved =>{
-      this.allUserSkill.value?.push(newSkillSaved as Skill)
-      this.updateAllUserSkill(this.allUserSkill.value as Array<Skill>)
-    })
+    }, { headers: new HttpHeaders({'Content-Type':  'application/json', Authorization: `Bearer ${this.accesstoken}`}) }).pipe(
+      catchError((error: HttpErrorResponse)=>{
+        if (error.status < 400) {
+          return throwError(()=> new Error('No se pudo crear nueva habilidad'));
+        } else if (error.status >= 400 && error.status < 500) {
+          return throwError(()=> new Error('Ocurrió un error en la solicitud: ' + error.error.message));
+        } else {
+          return throwError(()=> new Error('Ocurrió un error en el servidor: ' + error.message));
+        }
+      })
+     )
+
   }
 
   getAllUserSkill() {
@@ -61,29 +69,34 @@ export class SkillApiService {
     {
       skillName: newDataSkill.skillName,
       percentage: newDataSkill.percentage
-    }, { headers: new HttpHeaders({'Content-Type':  'application/json', Authorization: `Bearer ${this.accesstoken}`}) }).subscribe(updatedSkill =>{
-      let s = updatedSkill as Skill
-      if(this.allUserSkill.value){
-        for (let index = 0; index < this.allUserSkill.value?.length; index++) {
-          if(this.allUserSkill.value[index].id === s.id){
-            this.allUserSkill.value[index].skillName = s.skillName
-            this.allUserSkill.value[index].percentage = s.percentage
-            break;
-          }
+    }, { headers: new HttpHeaders({'Content-Type':  'application/json', Authorization: `Bearer ${this.accesstoken}`}) }).pipe(
+      catchError((error: HttpErrorResponse)=>{
+        if (error.status < 400) {
+          return throwError(()=> new Error('No se pudo editar la habilidad'));
+        } else if (error.status >= 400 && error.status < 500) {
+          return throwError(()=> new Error('Ocurrió un error en la solicitud: ' + error.error.message));
+        } else {
+          return throwError(()=> new Error('Ocurrió un error en el servidor: ' + error.message));
         }
-      }
-      this.updateAllUserSkill(this.allUserSkill.value as Array<Skill>)
-    });
+      })
+     )
+    
   }
 
   deleteSkill(idSkill: string){
     return this._http.delete(`${this.apiUrl}/api/skill/delete/${idSkill}`,
-    { headers: new HttpHeaders({ Authorization: `Bearer ${this.accesstoken}` }) }).subscribe(message => {
-      let index = this.allUserSkill.value?.findIndex(obj => obj.id === idSkill)
-      if(index!==-1){
-        this.updateAllUserSkill(this.allUserSkill.getValue()?.filter(obj => obj.id!==idSkill) as Array<Skill>)
-      }
-    });
+    { headers: new HttpHeaders({ Authorization: `Bearer ${this.accesstoken}` }) }).pipe(
+      catchError((error: HttpErrorResponse)=>{
+        if (error.status < 400) {
+          return throwError(()=> new Error('No se pudo eliminar la habilidad'));
+        } else if (error.status >= 400 && error.status < 500) {
+          return throwError(()=> new Error('Ocurrió un error en la solicitud: ' + error.error.message));
+        } else {
+          return throwError(()=> new Error('Ocurrió un error en el servidor: ' + error.message));
+        }
+      })
+     )
+    
   }
 
 }

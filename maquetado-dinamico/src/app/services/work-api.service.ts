@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { BehaviorSubject, Observable, catchError, throwError } from 'rxjs';
 import { environment } from '../environments/environment'
 import { ApiService } from './api.service';
 import { Work } from '../others/interfaces';
@@ -34,7 +34,7 @@ export class WorkApiService {
     this.allUserWork.next(allWorks)
   }
 
-  createWork(newWork: Work){
+  createWork(newWork: Work) : Observable<any>{
     return this._http.post(`${this.apiUrl}/api/work/create/${this.idLoggedUser}`,
     {
       company: newWork.company,
@@ -42,10 +42,17 @@ export class WorkApiService {
       startdate: newWork.startdate,
       enddate: newWork.enddate,
       idPicture: null
-    }, { headers: new HttpHeaders({ 'Content-Type': 'application/json', Authorization: `Bearer ${this.accesstoken}` }) }).subscribe(newWorkSaved => {
-      this.allUserWork.value?.push(newWorkSaved as Work);
-      this.updateAllUserWork(this.allUserWork.value as Array<Work>)
-    });
+    }, { headers: new HttpHeaders({ 'Content-Type': 'application/json', Authorization: `Bearer ${this.accesstoken}` }) }).pipe(
+      catchError((error: HttpErrorResponse)=>{
+        if (error.status < 400) {
+          return throwError(()=> new Error('No se pudo crear nueva experiencia'));
+        } else if (error.status >= 400 && error.status < 500) {
+          return throwError(()=> new Error('Ocurrió un error en la solicitud: ' + error.error.message));
+        } else {
+          return throwError(()=> new Error('Ocurrió un error en el servidor: ' + error.message));
+        }
+      })
+     )
   }
 
   getAllUserWork(){
@@ -59,38 +66,39 @@ export class WorkApiService {
     { headers: new HttpHeaders({ Authorization: `Bearer ${this.accesstoken}` }) });
   }
 
-  updateWork(idWork: string, newDataWork: Work){
+  updateWork(idWork: string, newDataWork: Work) : Observable<any>{
     return this._http.post(`${this.apiUrl}/api/work/update/${idWork}`,
     {
       company: newDataWork.company,
       job: newDataWork.job,
       startdate: newDataWork.startdate,
       enddate: newDataWork.enddate
-    }, { headers: new HttpHeaders({ 'Content-Type': 'application/json', Authorization: `Bearer ${this.accesstoken}` }) }).subscribe(updatedWork => {
-      let w = updatedWork as Work
-      if(this.allUserWork.value){
-        for (let index = 0; index < this.allUserWork.value?.length; index++) {
-          if(this.allUserWork.value[index].id === w.id){
-            this.allUserWork.value[index].company = w.company
-            this.allUserWork.value[index].job = w.job
-            this.allUserWork.value[index].startdate = w.startdate
-            this.allUserWork.value[index].enddate = w.enddate
-            break;
-          }
+    }, { headers: new HttpHeaders({ 'Content-Type': 'application/json', Authorization: `Bearer ${this.accesstoken}` }) }).pipe(
+      catchError((error: HttpErrorResponse)=>{
+        if (error.status < 400) {
+          return throwError(()=> new Error('No se pudo editar la experiencia'));
+        } else if (error.status >= 400 && error.status < 500) {
+          return throwError(()=> new Error('Ocurrió un error en la solicitud: ' + error.error.message));
+        } else {
+          return throwError(()=> new Error('Ocurrió un error en el servidor: ' + error.message));
         }
-      }
-      this.updateAllUserWork(this.allUserWork.value as Array<Work>);
-    });
+      })
+     )
   }
 
   deleteWork(idWork: string) {
     return this._http.delete(`${this.apiUrl}/api/work/delete/${idWork}`, 
-    { headers: new HttpHeaders({ Authorization: `Bearer ${this.accesstoken}` }) }).subscribe(message=>{
-      let index = this.allUserWork.value?.findIndex(obj => obj.id === idWork)
-      if(index !== -1){
-        this.updateAllUserWork(this.allUserWork.getValue()?.filter(obj => obj.id !== idWork) as Work[])
-      }
-    });
+    { headers: new HttpHeaders({ Authorization: `Bearer ${this.accesstoken}` }) }).pipe(
+      catchError((error: HttpErrorResponse)=>{
+        if (error.status < 400) {
+          return throwError(()=> new Error('No se pudo eliminar la experiencia'));
+        } else if (error.status >= 400 && error.status < 500) {
+          return throwError(()=> new Error('Ocurrió un error en la solicitud: ' + error.error.message));
+        } else {
+          return throwError(()=> new Error('Ocurrió un error en el servidor: ' + error.message));
+        }
+      })
+     )
   }
 
 }

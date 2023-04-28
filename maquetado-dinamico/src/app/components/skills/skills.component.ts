@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MyErrorStateMatcher } from 'src/app/others/configs';
+import { ToastrService } from 'ngx-toastr';
+import { MyErrorStateMatcher, configForToastr } from 'src/app/others/configs';
 import { Skill } from 'src/app/others/interfaces';
 import { ApiService } from 'src/app/services/api.service';
 import { SkillApiService } from 'src/app/services/skill-api.service';
@@ -26,7 +27,8 @@ export class SkillsComponent {
   constructor(
     private _api : ApiService,
     private _user : UserApiService,
-    private _skill : SkillApiService
+    private _skill : SkillApiService,
+    private toastr : ToastrService
   )
   {
     this._api.loginData$.subscribe(loginData => this.isLogged = loginData.isLogged)
@@ -68,6 +70,10 @@ export class SkillsComponent {
     return `${value}`;
   }
 
+  showError(message: string){
+    this.toastr.error(message, '', configForToastr)
+  }
+
   addNewSkill(){
     let newSkill : Skill = {
       id: null,
@@ -75,7 +81,16 @@ export class SkillsComponent {
       skillName: this.forms.controls.nameSkillFormControl.getRawValue(),
       percentage: this.forms.controls.percentageFormControl.getRawValue()
     }
-    this._skill.createSkill(newSkill)
+    this._skill.createSkill(newSkill).subscribe({
+      next: (newSkillSaved) =>{
+        this.userSkill?.push(newSkillSaved as Skill)
+        this._skill.updateAllUserSkill(this.userSkill as Array<Skill>)
+        this.toastr.success('Se agrego nueva habilidad exitosamente!', '', configForToastr)
+      },
+      error: (err)=>{
+        this.showError(err.message)
+      }
+    })
     this.clearInputs()
   }
 
@@ -86,11 +101,40 @@ export class SkillsComponent {
       skillName: this.forms.controls.nameSkillFormControl.dirty ? this.forms.controls.nameSkillFormControl.getRawValue() : null,
       percentage: this.forms.controls.percentageFormControl.dirty ? this.forms.controls.percentageFormControl.getRawValue() : null
     }
-    this._skill.updateSkill(idSkill, newDataSkill)
+    this._skill.updateSkill(idSkill, newDataSkill).subscribe({
+      next: (updatedSkill) =>{
+        let s = updatedSkill as Skill
+        if(this.userSkill){
+          for (let index = 0; index < this.userSkill?.length; index++) {
+            if(this.userSkill[index].id === s.id){
+              this.userSkill[index].skillName = s.skillName
+              this.userSkill[index].percentage = s.percentage
+              break;
+            }
+          }
+        }
+        this._skill.updateAllUserSkill(this.userSkill as Array<Skill>)
+        this.toastr.success('Se edito la habilidad exitosamente!', '', configForToastr);
+      },
+      error: (err)=>{
+        this.showError(err.message)
+      }
+    })
   }
 
   deleteSkill(idSkill: string){
-    this._skill.deleteSkill(idSkill)
+    this._skill.deleteSkill(idSkill).subscribe({
+      next: (res) =>{
+        let index = this.userSkill?.findIndex(obj => obj.id === idSkill)
+        if(index!==-1){
+          this._skill.updateAllUserSkill(this.userSkill?.filter(obj => obj.id!==idSkill) as Array<Skill>)
+          this.toastr.warning('Se elimino la habilidad exitosamente!', '', configForToastr);
+        }
+      },
+      error: (err)=>{
+        this.showError(err.message)
+      }
+    })
   }
 
 }

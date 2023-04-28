@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { BehaviorSubject, Observable, catchError, throwError } from 'rxjs';
 import { Address } from '../others/interfaces';
 import { environment } from '../environments/environment';
 import { ApiService } from './api.service';
@@ -60,9 +60,18 @@ export class AddressApiService {
     }, { headers: new HttpHeaders({
       'Content-Type':  'application/json',
       Authorization: `Bearer ${this.accesstoken}`
-    }) }).subscribe(address => {
-      this._user.getUser()
-    });
+    }) }).pipe(
+      catchError((error: HttpErrorResponse)=>{
+        if (error.status < 400) {
+          return throwError(()=> new Error('No se pudo actualizar la direccion del usuario'));
+        } else if (error.status >= 400 && error.status < 500) {
+          return throwError(()=> new Error('Ocurrió un error en la solicitud: ' + error.error.message));
+        } else {
+          return throwError(()=> new Error('Ocurrió un error en el servidor: ' + error.message));
+        }
+      })
+     )
+  
   }
 
   deleteAddress(idAddress: string) : Observable<any>{
