@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { MyErrorStateMatcher } from 'src/app/others/configs';
+import { ToastrService } from 'ngx-toastr';
+import { MyErrorStateMatcher, configForToastr } from 'src/app/others/configs';
 import { ApiService } from 'src/app/services/api.service';
 import { UserApiService } from 'src/app/services/user-api.service';
 
@@ -21,7 +22,8 @@ export class AboutComponent implements OnInit{
 
   constructor(
     private _api : ApiService,
-    private _user : UserApiService
+    private _user : UserApiService,
+    private toastr : ToastrService
   )
   {
     this._api.loginData$.subscribe(logData => this.isLogged=logData.isLogged)
@@ -50,6 +52,10 @@ export class AboutComponent implements OnInit{
     }
   }
 
+  showError(message: string){
+    this.toastr.error(message, '', configForToastr)
+  }
+
   updateAbout(){
     const newAbout = {
       firstname: null,
@@ -60,7 +66,15 @@ export class AboutComponent implements OnInit{
       githubUrl: null,
       linkedinUrl: null
     }
-    this._user.updatePersonalInformation(newAbout);
+    this._user.updatePersonalInformation(newAbout).subscribe({
+      next: (updatedUser) =>{
+        this._user.updateUser(updatedUser)
+        this.toastr.success('Se edito acerca del usuario exitosamente!', '', configForToastr);
+      },
+      error: (err)=>{
+        this.showError(err.message)
+      }
+    });
   }
 
 }

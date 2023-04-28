@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MyErrorStateMatcher } from 'src/app/others/configs';
+import { ToastrService } from 'ngx-toastr';
+import { MyErrorStateMatcher, configForToastr } from 'src/app/others/configs';
 import { Project } from 'src/app/others/interfaces';
 import { ApiService } from 'src/app/services/api.service';
 import { ProjectApiService } from 'src/app/services/project-api.service';
@@ -28,7 +29,8 @@ export class ProjectComponent {
   constructor(
     private _api : ApiService,
     private _user : UserApiService,
-    private _project : ProjectApiService
+    private _project : ProjectApiService,
+    private toastr : ToastrService
   )
   {
     this._api.loginData$.subscribe(loginData => this.isLogged = loginData.isLogged)
@@ -68,6 +70,10 @@ export class ProjectComponent {
     this.forms.reset()
   }
 
+  showError(message: string){
+    this.toastr.error(message, '', configForToastr)
+  }
+
   addNewProject(){
     let newProject : Project = {
       id: null,
@@ -77,7 +83,16 @@ export class ProjectComponent {
       linkGithub: this.forms.controls.linkGithubFormControl.getRawValue(),
       linkProject: this.forms.controls.linkProjectFormControl.getRawValue()
     }
-    this._project.createProject(newProject)
+    this._project.createProject(newProject).subscribe({
+      next: (newProjectSaved) =>{
+        this.userProject?.push(newProjectSaved as Project)
+        this._project.updateAllUserProject(this.userProject as Array<Project>)
+        this.toastr.success('Se agrego nuevo proyecto exitosamente!', '', configForToastr);
+      },
+      error: (err)=>{
+        this.showError(err.message)
+      }
+    })
     this.clearInputs()
   }
 
@@ -90,11 +105,42 @@ export class ProjectComponent {
       linkGithub: this.forms.controls.linkGithubFormControl.dirty ? this.forms.controls.linkGithubFormControl.getRawValue() : null,
       linkProject: this.forms.controls.linkProjectFormControl.dirty ? this.forms.controls.linkProjectFormControl.getRawValue() : null
     }
-    this._project.updateProject(idProject, newDataProject)
+    this._project.updateProject(idProject, newDataProject).subscribe({
+      next: (updatedProject) =>{
+        let p = updatedProject as Project
+        if(this.userProject){
+          for (let index = 0; index < this.userProject?.length; index++) {
+            if(this.userProject[index].id === p.id){
+              this.userProject[index].name = p.name
+              this.userProject[index].description = p.description
+              this.userProject[index].linkGithub = p.linkGithub
+              this.userProject[index].linkProject = p.linkProject
+              break;
+            }
+          }
+        }
+        this._project.updateAllUserProject(this.userProject as Array<Project>)
+        this.toastr.success('Se edito el proyecto exitosamente!', '', configForToastr);
+      },
+      error: (err)=>{
+        this.showError(err.message)
+      }
+    });
   }
 
   deleteProject(idProject: string){
-    this._project.deleteProject(idProject)
+    this._project.deleteProject(idProject).subscribe({
+      next: (res) =>{
+        let index = this.userProject?.findIndex(obj => obj.id===idProject)
+        if(index!==-1){
+          this._project.updateAllUserProject(this.userProject?.filter(obj => obj.id!==idProject) as Array<Project>)
+          this.toastr.warning('Se elimino el proyecto exitosamente!', '', configForToastr);
+        }
+      },
+      error: (err)=>{
+        this.showError(err.message)
+      }
+    });
   }
 
 }

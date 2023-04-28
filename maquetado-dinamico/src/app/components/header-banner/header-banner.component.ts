@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
+import { environment } from 'src/app/environments/environment';
+import { configForToastr } from 'src/app/others/configs';
 import { User } from 'src/app/others/interfaces';
 import { AddressApiService } from 'src/app/services/address-api.service';
 import { ApiService } from 'src/app/services/api.service';
@@ -13,8 +16,8 @@ import { UserApiService } from 'src/app/services/user-api.service';
 })
 export class HeaderBannerComponent {
 
-  defaultBannerImage = "https://res.cloudinary.com/lean99/image/upload/v1681894210/Ap/no-image-banner_hhzvtu.png"
-  defaultProfileImage = "https://res.cloudinary.com/lean99/image/upload/v1681894210/Ap/no-image-profile_djkgad.png"
+  defaultBannerImage = environment.defaultBannerImage
+  defaultProfileImage = environment.defaultProfileImage
   isLogged : boolean = false;
   editBanner : boolean = false
   editProfile : boolean = false
@@ -41,7 +44,8 @@ export class HeaderBannerComponent {
     private _api : ApiService,
     private _user : UserApiService,
     private _address : AddressApiService,
-    private _picture : PictureApiService
+    private _picture : PictureApiService,
+    private toastr : ToastrService
   )
   {
     this._api.loginData$.subscribe(logData => this.isLogged = logData.isLogged)
@@ -98,6 +102,10 @@ export class HeaderBannerComponent {
     }
   }
 
+  showError(message: string){
+    this.toastr.error(message, '', configForToastr)
+  }
+
   updateInfo(){
     const newInfo = {
       firstname: this.forms.controls.firstnameFormControl.enabled&&this.forms.controls.firstnameFormControl.dirty ? this.forms.controls.firstnameFormControl.getRawValue() : null,
@@ -108,7 +116,15 @@ export class HeaderBannerComponent {
       linkedinUrl: this.forms.controls.linkedinFormControl.enabled&&this.forms.controls.linkedinFormControl.dirty ? this.forms.controls.linkedinFormControl.getRawValue() : null,
       about: null
     }
-    this._user.updatePersonalInformation(newInfo);
+    this._user.updatePersonalInformation(newInfo).subscribe({
+      next: (updatedUser) =>{
+        this._user.updateUser(updatedUser)
+        this.toastr.success('Se edito informacion del usuario exitosamente!', '', configForToastr);
+      },
+      error: (err)=>{
+        this.showError(err.message)
+      }
+    });
   }
 
   updateAddress(){
@@ -119,7 +135,15 @@ export class HeaderBannerComponent {
       city: this.formsAddress.controls.cityFormControl.enabled&&this.formsAddress.controls.cityFormControl.dirty ? { id: null, name: this.formsAddress.controls.cityFormControl.getRawValue() } : null,
       province: this.formsAddress.controls.provinceFormControl.enabled&&this.formsAddress.controls.provinceFormControl.dirty ? { id: null, name: this.formsAddress.controls.provinceFormControl.getRawValue() } : null
     }
-    this._address.updateAddress(newAddress);
+    this._address.updateAddress(newAddress).subscribe({
+      next: (address)=>{
+        this._user.getUser()
+        this.toastr.success('Se edito direccion del usuario exitosamente!', '', configForToastr);
+      },
+      error: (err)=>{
+        this.showError(err.message)
+      }
+    });
   }
 
   sendNewUpdatedData(){
@@ -148,11 +172,27 @@ export class HeaderBannerComponent {
   }
 
   updateBannerOrProfilePicture(type: string){
-    this._picture.uploadPicture(type, this.inputFile, null)
+    this._picture.uploadPicture(type, this.inputFile, null).subscribe({
+      next: ()=>{
+        this._user.getUser()
+        type=='banner' ? this.toastr.success('Se actualizo banner exitosamente!', '', configForToastr) : this.toastr.success('Se actualizo imagen de perfil exitosamente!', '', configForToastr);
+      },
+      error: (err)=>{
+        this.showError(err.message)
+      }
+    })
   }
 
   deleteBannerOrProfilePicture(type: string){
-    this._picture.deletePicture(type, null)
+    this._picture.deletePicture(type, null).subscribe({
+      next: ()=>{
+        this._user.getUser()
+        type=='banner' ? this.toastr.warning('Se elimino banner exitosamente!', '', configForToastr) : this.toastr.warning('Se elimino imagen de perfil exitosamente!', '', configForToastr);
+      },
+      error: (err)=>{
+        this.showError(err.message)
+      }
+    })
   }
 
 }

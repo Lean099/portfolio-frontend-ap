@@ -3,6 +3,12 @@
       <h3>Experiencia</h3>
       <button *ngIf="this.isLogged" class="btn editBtn" data-bs-toggle="modal" data-bs-target="#createNewExperienceModal"><i class="fa-solid fa-plus"></i></button>
     </div>
+
+    <div *ngIf="this.userWork.length==0" class="mb-4">
+      <p class="lead" style="margin: 0; font-size: 18px">
+        - Sin experiencia trabajando como programador pero si en proyectos personales que se pueden ver en mi GitHub.
+      </p>
+    </div>
   
     <div class="card border-light mb-3" *ngFor="let d of userWork; let indexOfElement=$implicit">
       <div class="row g-0">
@@ -88,13 +94,13 @@
           <div class="modal-content">
             <div class="modal-header">
               <h1 class="modal-title fs-5" id="experienceImageModalLabel">Actualizar la imagen de experiencia de {{d.company}}</h1>
-              <button (click)="resetInputFile()" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              <button (click)="resetInputFile('fileInput'+d.id)" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
               
               <div class="input-group">
-                <input class="form-control form-control-sm" (change)="onFileSelected($event)" id="fileInputExperience" type="file">
-                <button class="btn btn-dark btn-sm" (click)="resetInputFile()" type="button">
+                <input class="form-control form-control-sm" (change)="onFileSelected($event)" attr.id="fileInput{{d.id}}" type="file">
+                <button class="btn btn-dark btn-sm" (click)="resetInputFile('fileInput'+d.id)" type="button">
                   <div class="btn-close btn-close-white"></div>
                 </button>
               </div>
@@ -107,7 +113,7 @@
               
             </div>
             <div class="modal-footer">
-              <button (click)="resetInputFile()" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+              <button (click)="resetInputFile('fileInput'+d.id)" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
             </div>
           </div>
         </div>

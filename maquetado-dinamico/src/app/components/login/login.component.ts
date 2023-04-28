@@ -2,7 +2,8 @@ import { Component, Inject } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { ApiService } from 'src/app/services/api.service';
 import { FormControl, FormGroup } from '@angular/forms';
-import { IndividualConfig, ToastrService } from 'ngx-toastr';
+import { ToastrService } from 'ngx-toastr';
+import { configForToastr } from 'src/app/others/configs';
 
 @Component({
   selector: 'app-login',
@@ -19,25 +20,6 @@ export class LoginComponent {
     passwordFormControl: new FormControl('')
   })
 
-  configForToastr : IndividualConfig = {
-    disableTimeOut: false,
-    timeOut: 5000,
-    closeButton: false,
-    extendedTimeOut: 1000,
-    progressBar: false,
-    progressAnimation: 'decreasing',
-    enableHtml: false,
-    toastClass: 'ngx-toastr',
-    positionClass: 'toast-top-right',
-    titleClass: 'toast-title',
-    messageClass: 'toast-message',
-    easing: 'ease-in',
-    easeTime: 300,
-    tapToDismiss: true,
-    onActivateTick: false,
-    newestOnTop: false
-  }
-
   constructor(
     private _api : ApiService,
     @Inject(DOCUMENT) private document: Document,
@@ -45,11 +27,11 @@ export class LoginComponent {
   ){}
 
   showSuccess() {
-    this.toastr.success('Login exitoso!', '', this.configForToastr);
+    this.toastr.success('Login exitoso!', '', configForToastr);
   }
 
   showError(message: string){
-    this.toastr.error(message, '', this.configForToastr)
+    this.toastr.error(message, '', configForToastr)
   }
   
   login(){

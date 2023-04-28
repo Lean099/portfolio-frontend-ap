@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { BehaviorSubject, Observable, catchError, throwError } from 'rxjs';
 import { environment } from '../environments/environment';
 import { Project } from '../others/interfaces';
 import { ApiService } from './api.service';
@@ -41,10 +41,18 @@ export class ProjectApiService {
       description: newProject.description,
       linkGithub: newProject.linkGithub,
       linkProject: newProject.linkProject
-    }, { headers: new HttpHeaders({'Content-Type':  'application/json', Authorization: `Bearer ${this.accesstoken}`}) }).subscribe(newProjectSaved =>{
-      this.allUserProject.value?.push(newProjectSaved as Project)
-      this.updateAllUserProject(this.allUserProject.value as Array<Project>)
-    });
+    }, { headers: new HttpHeaders({'Content-Type':  'application/json', Authorization: `Bearer ${this.accesstoken}`}) }).pipe(
+      catchError((error: HttpErrorResponse)=>{
+        if (error.status < 400) {
+          return throwError(()=> new Error('No se pudo crear nuevo proyecto'));
+        } else if (error.status >= 400 && error.status < 500) {
+          return throwError(()=> new Error('Ocurrió un error en la solicitud: ' + error.error.message));
+        } else {
+          return throwError(()=> new Error('Ocurrió un error en el servidor: ' + error.message));
+        }
+      })
+     )
+    
   }
   
   getAllUserProject() {
@@ -65,31 +73,34 @@ export class ProjectApiService {
       description: newDataProject.description,
       linkGithub: newDataProject.linkGithub,
       linkProject: newDataProject.linkProject
-    }, { headers: new HttpHeaders({'Content-Type':  'application/json', Authorization: `Bearer ${this.accesstoken}`}) }).subscribe(updatedProject =>{
-      let p = updatedProject as Project
-      if(this.allUserProject.value){
-        for (let index = 0; index < this.allUserProject.value?.length; index++) {
-          if(this.allUserProject.value[index].id === p.id){
-            this.allUserProject.value[index].name = p.name
-            this.allUserProject.value[index].description = p.description
-            this.allUserProject.value[index].linkGithub = p.linkGithub
-            this.allUserProject.value[index].linkProject = p.linkProject
-            break;
-          }
+    }, { headers: new HttpHeaders({'Content-Type':  'application/json', Authorization: `Bearer ${this.accesstoken}`}) }).pipe(
+      catchError((error: HttpErrorResponse)=>{
+        if (error.status < 400) {
+          return throwError(()=> new Error('No se pudo editar el proyecto'));
+        } else if (error.status >= 400 && error.status < 500) {
+          return throwError(()=> new Error('Ocurrió un error en la solicitud: ' + error.error.message));
+        } else {
+          return throwError(()=> new Error('Ocurrió un error en el servidor: ' + error.message));
         }
-      }
-      this.updateAllUserProject(this.allUserProject.value as Array<Project>)
-    });
+      })
+     )
+    
   }
 
   deleteProject(idProject: string){
     return this._http.delete(`${this.apiUrl}/api/project/delete/${idProject}`,
-    { headers: new HttpHeaders({ Authorization: `Bearer ${this.accesstoken}` }) }).subscribe(message =>{
-      let index = this.allUserProject.value?.findIndex(obj => obj.id===idProject)
-      if(index!==-1){
-        this.updateAllUserProject(this.allUserProject.getValue()?.filter(obj => obj.id!==idProject) as Array<Project>)
-      }
-    });
+    { headers: new HttpHeaders({ Authorization: `Bearer ${this.accesstoken}` }) }).pipe(
+      catchError((error: HttpErrorResponse)=>{
+        if (error.status < 400) {
+          return throwError(()=> new Error('No se pudo eliminar el proyecto'));
+        } else if (error.status >= 400 && error.status < 500) {
+          return throwError(()=> new Error('Ocurrió un error en la solicitud: ' + error.error.message));
+        } else {
+          return throwError(()=> new Error('Ocurrió un error en el servidor: ' + error.message));
+        }
+      })
+     )
+    
   }
 
 }
