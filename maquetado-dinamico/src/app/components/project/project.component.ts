@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import * as moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
 import { MyErrorStateMatcher, configForToastr } from 'src/app/others/configs';
 import { Project } from 'src/app/others/interfaces';
@@ -20,6 +21,7 @@ export class ProjectComponent {
   forms = new FormGroup({
     nameFormControl: new FormControl('', [Validators.required]),
     descriptionFormControl: new FormControl('', [Validators.required]),
+    enddateFormControl: new FormControl('', [Validators.required]),
     linkGithubFormControl: new FormControl(''),
     linkProjectFormControl: new FormControl('')
   })
@@ -59,6 +61,7 @@ export class ProjectComponent {
       let obj = this.userProject.find(el => el.id===id)
       this.forms.controls.nameFormControl.setValue(obj.name as string)
       this.forms.controls.descriptionFormControl.setValue(obj.description as string)
+      this.forms.controls.enddateFormControl.setValue(obj.enddate)
       this.forms.controls.linkGithubFormControl.setValue(obj.linkGithub as string)
       this.forms.controls.linkProjectFormControl.setValue(obj.linkProject as string)
     }else{
@@ -80,6 +83,7 @@ export class ProjectComponent {
       idUser: null,
       name: this.forms.controls.nameFormControl.getRawValue(),
       description: this.forms.controls.descriptionFormControl.getRawValue(),
+      enddate: moment(this.forms.get('enddateFormControl')?.value).toDate(),
       linkGithub: this.forms.controls.linkGithubFormControl.getRawValue(),
       linkProject: this.forms.controls.linkProjectFormControl.getRawValue()
     }
@@ -102,6 +106,7 @@ export class ProjectComponent {
       idUser: null,
       name: this.forms.controls.nameFormControl.dirty ? this.forms.controls.nameFormControl.getRawValue() : null,
       description: this.forms.controls.descriptionFormControl.dirty ? this.forms.controls.descriptionFormControl.getRawValue() : null,
+      enddate: this.forms.controls.enddateFormControl.dirty ? moment(this.forms.get('enddateFormControl')?.value).toDate() : null,
       linkGithub: this.forms.controls.linkGithubFormControl.dirty ? this.forms.controls.linkGithubFormControl.getRawValue() : null,
       linkProject: this.forms.controls.linkProjectFormControl.dirty ? this.forms.controls.linkProjectFormControl.getRawValue() : null
     }
@@ -113,6 +118,7 @@ export class ProjectComponent {
             if(this.userProject[index].id === p.id){
               this.userProject[index].name = p.name
               this.userProject[index].description = p.description
+              this.userProject[index].enddate = p.enddate
               this.userProject[index].linkGithub = p.linkGithub
               this.userProject[index].linkProject = p.linkProject
               break;

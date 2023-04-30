@@ -78,6 +78,7 @@ export interface Project {
     idUser : string|null
     name : string|null
     description : string|null
+    enddate : Date|null
     linkGithub : string|null
     linkProject : string|null
 }
