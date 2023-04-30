@@ -39,6 +39,7 @@ export class ProjectApiService {
     {
       name: newProject.name,
       description: newProject.description,
+      enddate: newProject.enddate,
       linkGithub: newProject.linkGithub,
       linkProject: newProject.linkProject
     }, { headers: new HttpHeaders({'Content-Type':  'application/json', Authorization: `Bearer ${this.accesstoken}`}) }).pipe(
@@ -71,6 +72,7 @@ export class ProjectApiService {
     {
       name: newDataProject.name,
       description: newDataProject.description,
+      enddate: newDataProject.enddate,
       linkGithub: newDataProject.linkGithub,
       linkProject: newDataProject.linkProject
     }, { headers: new HttpHeaders({'Content-Type':  'application/json', Authorization: `Bearer ${this.accesstoken}`}) }).pipe(
