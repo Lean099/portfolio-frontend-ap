@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders, HttpParams, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject, Observable, onErrorResumeNext, catchError, throwError } from 'rxjs';
-import { environment } from '../environments/environment'
+import { environment } from '../../environments/environment'
 import { LoginData, LoginResponse } from '../others/interfaces'
 
 // npm run ng serve -- --host=0.0.0.0 --disable-host-check

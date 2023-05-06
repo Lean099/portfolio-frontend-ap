@@ -1,0 +1,10 @@
+{
+  "hosting": {
+    "public": "dist/maquetado-dinamico",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  }
+}

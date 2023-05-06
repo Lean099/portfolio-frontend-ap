@@ -8,7 +8,7 @@ import { ApiService } from 'src/app/services/api.service';
 import { PictureApiService } from 'src/app/services/picture-api.service';
 import { MyErrorStateMatcher, configForToastr } from 'src/app/others/configs';
 import { ToastrService } from 'ngx-toastr';
-import { environment } from 'src/app/environments/environment';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-experience',

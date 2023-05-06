@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { environment } from 'src/app/environments/environment';
+import { environment } from 'src/environments/environment';
 import { configForToastr } from 'src/app/others/configs';
 import { User } from 'src/app/others/interfaces';
 import { AddressApiService } from 'src/app/services/address-api.service';

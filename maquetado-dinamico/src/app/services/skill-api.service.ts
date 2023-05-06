@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable, catchError, throwError } from 'rxjs';
 import { ApiService } from './api.service';
-import { environment } from '../environments/environment';
+import { environment } from '../../environments/environment';
 import { Skill } from '../others/interfaces';
 
 @Injectable({

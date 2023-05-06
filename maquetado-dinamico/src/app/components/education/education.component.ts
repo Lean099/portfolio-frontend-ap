@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import * as moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
-import { environment } from 'src/app/environments/environment';
+import { environment } from 'src/environments/environment';
 import { MyErrorStateMatcher, configForToastr } from 'src/app/others/configs';
 import { Education } from 'src/app/others/interfaces';
 import { ApiService } from 'src/app/services/api.service';
