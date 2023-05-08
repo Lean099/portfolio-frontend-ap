@@ -141,18 +141,25 @@ export class ExperienceComponent {
   }
 
   deleteWork(idWork : string){
-    this._work.deleteWork(idWork).subscribe({
-      next: (message)=>{
-        let index = this.userWork?.findIndex(obj => obj.id === idWork)
-        if(index !== -1){
-          this._work.updateAllUserWork(this.userWork?.filter(obj => obj.id !== idWork) as Work[])
-          this.toastr.warning('Se elimino la experiencia exitosamente!', '', configForToastr);
-        }
+    this._picture.deletePicture('work', idWork).subscribe({
+      next: ()=> {
+        this._work.deleteWork(idWork).subscribe({
+          next: (message)=>{
+            let index = this.userWork?.findIndex(obj => obj.id === idWork)
+            if(index !== -1){
+              this._work.updateAllUserWork(this.userWork?.filter(obj => obj.id !== idWork) as Work[])
+              this.toastr.warning('Se elimino la experiencia exitosamente!', '', configForToastr);
+            }
+          },
+          error: (err)=>{
+            this.showError(err.message)
+          }
+        });
       },
       error: (err)=>{
         this.showError(err.message)
       }
-    });
+    })
   }
 
   onFileSelected(event: any): void {

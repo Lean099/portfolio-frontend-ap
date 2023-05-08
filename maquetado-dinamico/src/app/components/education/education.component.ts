@@ -134,18 +134,25 @@ export class EducationComponent {
   }
 
   deleteEducation(idEducation: string){
-    this._education.deleteEducation(idEducation).subscribe({
-      next: (message)=>{
-        let index = this.userEducation?.findIndex(obj => obj.id===idEducation)
-        if(index!==-1){
-          this._education.updateAllUserEducation(this.userEducation?.filter(obj => obj.id!==idEducation) as Array<Education>)
-          this.toastr.warning('Se elimino la educacion exitosamente!', '', configForToastr);
-        }
+    this._picture.deletePicture('education', idEducation).subscribe({
+      next: ()=> {
+        this._education.deleteEducation(idEducation).subscribe({
+          next: (message)=>{
+            let index = this.userEducation?.findIndex(obj => obj.id===idEducation)
+            if(index!==-1){
+              this._education.updateAllUserEducation(this.userEducation?.filter(obj => obj.id!==idEducation) as Array<Education>)
+              this.toastr.warning('Se elimino la educacion exitosamente!', '', configForToastr);
+            }
+          },
+          error: (err)=>{
+            this.showError(err.message)
+          }
+        });
       },
-      error: (err)=>{
+      error: (err)=> {
         this.showError(err.message)
       }
-    });
+    })
   }
 
   onFileSelected(event: any): void{
