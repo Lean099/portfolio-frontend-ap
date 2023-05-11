@@ -29,7 +29,7 @@
         </div>
         <p class="card-text" style="margin: 10px 0 10px 0">Email: {{ this.user?.email }}</p>
         <p class="card-text" style="margin: 0 0 10px 0">Telefono: {{ this.user?.phone }}</p>
-        <p class="card-text" style="margin: 0 0 10px 0">Edad: {{ this.user?.dob | date: 'dd/MM/yyyy' }}</p>
+        <p class="card-text" style="margin: 0 0 10px 0">Fecha de Nacimiento: {{ this.user?.dob | date: 'dd/MM/yyyy' }}</p>
         <p class="card-text" style="margin: 0 0 10px 0">
           Localidad: 
           <span *ngIf="this.user?.address?.country">{{this.user?.address?.country?.name}}, </span>
